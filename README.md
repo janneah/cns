@@ -1,1 +1,1 @@
-# Master's thesis concerning copy number signatures
+Project folder for thesis concerning copy number signatures
