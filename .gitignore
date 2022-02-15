@@ -1,0 +1,11 @@
+data/chrominfo.snp6.hg19.RData
+data/AnnotationData/Encode_replication_timing.tsv
+.gitignore
+data/AnnotationData/gap_hg19.txt
+data/AnnotationData/chrominfo.snp6.txt
+data/AnnotationData/filteredAscat.txt
+data/AnnotationData/gc.content.txt
+data/AnnotationData/hg19.chrom.sizes.txt
+data/AnnotationData/mateo_hg19_chromsizes.txt
+data/AnnotationData/repeats
+data/AnnotationData/wgEncodeUwRepliSeqGm12878WaveSignalRep1.bw

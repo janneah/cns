@@ -5,73 +5,70 @@ library(gtools)
 source("../cnsignatures/functions.R")
 
 
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly = TRUE)
 # test if there is at least one argument: if not, return an error
-if (length(args)==0) {
-  stop("At least one argument must be supplied (cancer type)", call.=FALSE)
-} 
+if (length(args) == 0) {
+  stop("At least one argument must be supplied (cancer type)", call. = FALSE)
+}
 
-paramToMeasure = "segVal"
-binSize = 1e6 # 0.5e7
-args[1] = "LUAD"
-type = args[1]
+param_to_measure <- "segVal"
+bin_size <- 1e6 # 0.5e7
+args[1] <- "LUAD"
+type <- args[1]
 
 chrominfo_hg19 <- as.data.frame(chrominfo_hg19)
 # Read the data and filter for downsampling
-ascat <-  readRDS("../../Datasets/TCGA/PanCancer/TCGA_ASCAT_RAW_PVL/filteredAscatWithRaw.rds")
-ascat$segVal <- log2((ascat$nAraw + ascat$nBraw)/ascat$Ploidy)
-ascat$segVal[which(ascat$segVal == -Inf) ] <- -max(ascat$segVal)
-ascat$ID <- as.character(ascat$ID)
+ascat <- readRDS(
+  "../../Datasets/TCGA/PanCancer/TCGA_ASCAT_RAW_PVL/filteredAscatWithRaw.rds")
+ascat$segval <- log2((ascat$nAraw + ascat$nBraw) / ascat$Ploidy)
+ascat$segval[which(ascat$segVal == -Inf)] <- -max(ascat$segVal)
+ascat$id <- as.character(ascat$ID)
 
 output_pancan <- data.frame()
 types <- args[1]
-for(t in types){
-  cat(t,"\n")
+for (t in types) {
+  cat(t, "\n")
   t_ascat <- ascat %>% filter(cancer_type == t)
   t_ascat <- t_ascat %>% filter(Chr != 23, Chr != 24)
-  
   cat("Keeping rows with Abb.Cell.Frac < 0.9 and > 0.2 from Ascat...\n")
   t_ascat <- t_ascat %>%
     filter(Aberrant.Cell.Fraction < 0.99) %>%
     filter(Aberrant.Cell.Fraction > 0.2)
-  seg_big <- t_ascat[(t_ascat[,4]-t_ascat[,3]) >= 3e6,]
-  seg_small <- t_ascat[(t_ascat[,4]-t_ascat[,3]) < 3e6,]
+  seg_big <- t_ascat[(t_ascat[, 4] - t_ascat[, 3]) >= 3e6, ]
+  seg_small <- t_ascat[(t_ascat[, 4] - t_ascat[, 3]) < 3e6, ]
   seg_shrink <- shrink.seg.ai.wrapper(seg_big)
   t_ascat <- rbind(seg_shrink, seg_small)
-  
   mean(t_ascat$End - t_ascat$Start)
-#ascat <- ascat[which(ascat$ID %in% TCGA_BLCA_CIN_measures$sample_id),]
+#ascat <- ascat[which(ascat$ID %in% TCGA_BLCA_CIN_measures$sample_id),] # nolint
 
-  segVal_mat <- calculateChrEvents(t_ascat, chrominfo_hg19=chrominfo_hg19,
+  segVal_mat <- calculateChrEvents(t_ascat, chrominfo_hg19 = chrominfo_hg19,
                                  binSize = binSize, 
                                  paramToMeasure = "segVal")
-  output_pancan<-rbind(output_pancan,segVal_mat)
+  output_pancan <- rbind(output_pancan, segVal_mat)
 
 }
 
-
-
-id_num = 1
-tmp<-reshape::melt(output[id_num,])
-tmp$color <- ifelse(tmp$value == 0, "0", ifelse(tmp$value < 0, "Loss","Gain"))
-tmp$Chr <- as.numeric(unlist(lapply(tmp$variable, function(x){
-  split<-str_split(x,pattern = "_")
-  substr(split[[1]][1],start = 4,5)
+id_num <- 1
+tmp <- reshape::melt(output[id_num, ])
+tmp$color <- ifelse(tmp$value == 0, "0", ifelse(tmp$value < 0, "Loss", "Gain"))
+tmp$Chr <- as.numeric(unlist(lapply(tmp$variable, function(x) {
+  split <- str_split(x, pattern = "_")
+  substr(split[[1]][1], start = 4, 5)
 })))
 tmp$position <- 1: nrow(tmp)
-tt<- tmp %>% 
+tt <- tmp %>% 
   group_by(Chr) %>%
   summarise(n = n())
-num = 250
-for(i in 2:22){
-  num = num + tt$n[i]
+num <- 250
+for (i in 2:22) {
+  num <- num + tt$n[i]
   cat(num, " ")
 }
-p2 <- ggplot(tmp) + 
+p2 <- ggplot(tmp) +
   geom_point(aes(x = position, y = value, color = color)) +
-  geom_col(aes(x = position, y = value, fill=color)) +
+  geom_col(aes(x = position, y = value, fill = color)) +
   geom_vline(xintercept = 250) + # 25
-  geom_vline(xintercept = 494) + # 25 
+  geom_vline(xintercept = 494) + # 25
   geom_vline(xintercept = 693) + # 20
   geom_vline(xintercept = 885) + # 20
   geom_vline(xintercept = 1066) + # 19

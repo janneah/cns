@@ -15,7 +15,7 @@ library(corrplot)
 library(GGally)
 library(YAPSA)
 
-args = commandArgs(trailingOnly=TRUE)
+args <- commandArgs(trailingOnly = TRUE)
 
 source("functions.R")
 source("main_functions.R")
@@ -56,11 +56,13 @@ ascat <- ascat %>%
 tmp_ascat <- ascat %>% filter(cancer_type == cancerType)
 
 
-colnames(tmp_ascat) <- c("ID", "chromosome", "start", "end", "nProbes", "cn","nA","nB","Ploidy","Aberrant.Cell.Fraction", "type") # TCGA have Type column
+colnames(tmp_ascat) <- c(
+  "ID", "chromosome", "start", "end", "nProbes", "cn", "nA",
+  "nB", "Ploidy", "Aberrant.Cell.Fraction", "type") # TCGA have Type column
 tmp_ascat$segVal <- log2((tmp_ascat$nA + tmp_ascat$nB)/tmp_ascat$Ploidy + 1)
 
 list_of_segments <- list()
-cnt = 1
+cnt <- 1
 
 for(id in unique(tmp_ascat$ID)) {
   tmp <- tmp_ascat %>%
