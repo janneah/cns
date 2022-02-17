@@ -10,7 +10,7 @@ Workflow for LDA analysis of ASCAT data
 sample = '/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA/TCGA*.segments.raw.txt' 
 centromereinfo = '../data/chrominfo.snp6.txt'
 ascat = '../data/filteredAscat.txt'
-gc = '../data/gc_content.txt'
+gc = '../data/gc.content.txt'
 output = '../steps/AllTCGA_features_mateo10.txt'
 
 def create_feature_file(sample, centromere, ascat, gc, output): 

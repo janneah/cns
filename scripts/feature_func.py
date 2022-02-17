@@ -130,3 +130,20 @@ def makefeatfile(df, centromere, ascat, gccontent):
     feature_df = feature_df.groupby(['Sample', 'Chr'], as_index=False, sort=False).mean()
  
     return feature_df
+
+def discretize(df):
+    df['CopyNumber'] = df['CopyNumber'].round()
+    df['SegmentSize'] = pd.cut(
+        x=df['SegmentSize'], 
+        bins=[0, 1e5, 1e6, 3e6, 10e6, 5e7], 
+        labels=[1, 2, 3, 4, 5]
+        )
+    # df['Dist2Centromere'] = pd.cut(df['Dist2Centromere'], bins=[])
+    # df['SegVal']          = pd.cut(df['SegVal'], bins=[])
+    # df['LOH']             = pd.cut(df['LOH'], bins=[])
+    # df['SizeDiploidSeg']  = pd.cut(df['SizeDiploidSeg'], bins=[])
+    # df['ChangepointCN']   = pd.cut(df['ChangepointCN'], bins=[])
+    # df['Dist2NearestCNV'] = pd.cut(df['Dist2NearestCNV'], bins=[])
+    # df['GCcontentSeg']    = pd.cut(df['GCcontentSeg'], bins=[])
+
+    return df
