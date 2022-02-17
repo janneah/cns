@@ -28,3 +28,7 @@ data/wgEncodeUwRepliSeqGm12878WaveSignalRep1.bw
 scripts/.gwf/update
 scripts/.gwf/logs/create_features.stderr
 scripts/.gwf/logs/create_features.stdout
+scripts/modpath.py
+scripts/__pycache__/modpath.cpython-38.pyc
+steps/test_features_mateo_10.txt
+data/gc_content.txt

@@ -1,4 +1,4 @@
-import math
+import math, os
 import pandas as pd
 import numpy as np
 
@@ -100,7 +100,10 @@ def getDist2CNV(df):
     return dist2CNV
 
 def listdfs(files):
-    dfs = [pd.read_table(file) for file in files]
+    dfs = []
+    for file in files:
+        if os.path.getsize(file) > 1:
+            dfs.append(pd.read_table(file))
     return dfs
 
 def makefeatfile(df, centromere, ascat, gccontent):
@@ -123,5 +126,7 @@ def makefeatfile(df, centromere, ascat, gccontent):
         'GCcontentSeg': getGCcontent(df, gccontent)
      
     })
+
+    feature_df = feature_df.groupby(['Sample', 'Chr'], as_index=False, sort=False).mean()
  
     return feature_df

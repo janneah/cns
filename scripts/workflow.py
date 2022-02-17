@@ -1,19 +1,20 @@
 from gwf import Workflow, AnonymousTarget
-import glob
+import modpath
 
 gwf = Workflow()
 
-# Input files
-sample = glob.glob('/home/janneae/cns/data/TCGA-*.segments.raw.txt') 
-centromereinfo = '/home/janneae/cns/data/chrominfo.snp6.txt'
-ascat = '/home/janneae/cns/data/filteredAscat.txt'
-gc = '/home/janneae/cns/data/gc.content.txt'
-output = '/home/janneae/cns/steps/TCGA_features_mateo_10.txt'
+"""
+Workflow for LDA analysis of ASCAT data
+"""
 
-# '/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA/TCGA-*.segments.raw.txt'
+sample = '/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA/TCGA*.segments.raw.txt' 
+centromereinfo = '../data/chrominfo.snp6.txt'
+ascat = '../data/filteredAscat.txt'
+gc = '../data/gc_content.txt'
+output = '../steps/AllTCGA_features_mateo10.txt'
 
-def create_feature_file(sample, centromere, ascat, gc, output):    
-    inputs = [sample, centromere, ascat, gc]
+def create_feature_file(sample, centromere, ascat, gc, output): 
+    inputs = [centromere, ascat, gc]
     outputs = [output]
     options = {
         'memory': '5g',

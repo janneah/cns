@@ -1,9 +1,9 @@
-import argparse
+import argparse, glob
 import feature_func as features
 import pandas as pd
 
 parser = argparse.ArgumentParser(description='Create feature files')
-parser.add_argument('samplefiles', help='Input file of samples')
+parser.add_argument('samplefiles', nargs='+', help='Input file of samples')
 parser.add_argument('centroinfo', help='File containing centromere information')
 parser.add_argument('ascat', help='File containing ploidy information')
 parser.add_argument('gccontent', help='File containing GC content')
@@ -23,3 +23,14 @@ def fullDF(samplefiles, centroinfo, ascat, gccontent, output):
     return feature_df
 
 fullDF(args.samplefiles, args.centroinfo, args.ascat, args.gccontent, args.outputfile)
+
+ 
+# sample = glob.glob('/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA/TCGA-*.segments.raw.txt', recursive=True)
+# centromereinfo = '../data/chrominfo.snp6.txt'
+# ascat = '../data/filteredAscat.txt'
+# gc = '../data/gc_content.txt'
+# output = '../steps/testall_features_mateo10.txt'
+
+# fullDF(sample, centromereinfo, ascat, gc, output)
+
+
