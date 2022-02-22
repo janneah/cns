@@ -1,18 +1,18 @@
-import math, os
+import math
 import pandas as pd
 import numpy as np
 
 def relabelSC(df):
-    df.loc[df['chr'] == 'X', 'chr'] = 23
-    df.loc[df['chr'] == 'Y', 'chr'] = 24
+    df.loc[df['Chr'] == 'X', 'Chr'] = 23
+    df.loc[df['Chr'] == 'Y', 'Chr'] = 24
     return df
 
 def getDist2Centromere(df, anno):
     dist_vec = [0] * len(df)
     for i in range(len(df)):
-        segstart = df['startpos'][i]
-        segend = df['endpos'][i]
-        chrom_no = int(df['chr'][i])
+        segstart = df['Start'][i]
+        segend = df['End'][i]
+        chrom_no = int(df['Chr'][i])
         
         centstart = anno.loc[anno['chrom'] == chrom_no]['centstart'].iloc[0]
         centend = anno.loc[anno['chrom'] == chrom_no]['centend'].iloc[0]
@@ -26,13 +26,12 @@ def getDist2Centromere(df, anno):
             
     return dist_vec
 
-def getSegVal(df, ascat):
-    SegValVec = [0] * len(df)
+def getSegVal(ascat):
+    SegValVec = [0] * len(ascat)
     
-    for i in range(len(df)):
-        ploidy = ascat.loc[ascat['ID'] == df['sample'][i]]['Ploidy'].iloc[0]
-        segval = (df['nAraw'][i] + df['nBraw'][i]) / ploidy
-
+    for i in range(len(ascat)):
+        segval = (ascat['nAraw'][i] + ascat['nBraw'][i]) / ascat['Ploidy'][i]
+    
         if segval > 0: SegValVec[i] = math.log2(segval)
         else: SegValVec[i] = 0
 
@@ -42,19 +41,19 @@ def getLOH(df):
     LOH = [0] * len(df)
     
     for i in range(len(df)):
-        if df['nMajor'][i] == 0 or df['nMinor'][i] == 0: LOH[i] = 1
+        if df['nA'][i] == 0 or df['nB'][i] == 0: LOH[i] = 1
         else: LOH[i] = 0
     
     return LOH
 
 def getCP(df):
-    return df.groupby('chr')['chr'].transform('count') - 1
+    return df.groupby('Chr')['Chr'].transform('count') - 1
 
 def getSizeofDiploidSeg(df):
     size_diploid = [0] * len(df)
 
     for i in range(len(df)):
-        if df['nMajor'][i] + df['nMinor'][i] == 2: size_diploid[i] = df['endpos'][i] - df['startpos'][i]
+        if df['nA'][i] + df['nB'][i] == 2: size_diploid[i] = df['End'][i] - df['Start'][i]
         else: size_diploid[i] = 0
 
     return size_diploid
@@ -63,8 +62,8 @@ def getGCcontent(df, gc_file):
     gc = [0] * len(df)
 
     for i in range(len(df)):
-        chrom = int(df['chr'][i])
-        chr_rows = gc_file.loc[(gc_file['Chr'] == chrom) & (gc_file['Position'] >= df['startpos'][i]) & (gc_file['Position'] <= df['endpos'][i])]
+        chrom = int(df['Chr'][i])
+        chr_rows = gc_file.loc[(gc_file['Chr'] == chrom) & (gc_file['Position'] >= df['Start'][i]) & (gc_file['Position'] <= df['End'][i])]
         gc_bases = chr_rows.loc[chr_rows['base'].isin(['G', 'C'])]['X100bp']
         
         if gc_bases.empty:
@@ -79,51 +78,43 @@ def getRepeats(df):
 
 def getDist2CNV(df):
     dist2CNV = [0] * len(df)
-    dist2CNV[0] = int(df['startpos'][1] - df['endpos'][0])
-    dist2CNV[len(df) - 1] = int(df['startpos'][len(df) - 1] - df['endpos'][len(df) - 2])
+    dist2CNV[0] = int(df['Start'][1] - df['End'][0])
+    dist2CNV[len(df) - 1] = int(df['Start'][len(df) - 1] - df['End'][len(df) - 2])
 
     for i in range(1, len(df)-1):
-        if df['chr'][i] == df['chr'][i - 1]:
-            prevCNV = df['endpos'][i - 1]
-            dist2prev =  df['startpos'][i] - prevCNV
-        elif df['chr'][i] != df['chr'][i - 1]:
+        if df['Chr'][i] == df['Chr'][i - 1]:
+            prevCNV = df['End'][i - 1]
+            dist2prev =  df['Start'][i] - prevCNV
+        elif df['Chr'][i] != df['Chr'][i - 1]:
             dist2prev = float('inf')
         
-        if df['chr'][i] == df['chr'][i + 1]:
-            nextCNV = df['startpos'][i + 1]
-            dist2next = nextCNV - df['endpos'][i]
-        elif df['chr'][i] != df['chr'][i + 1]:
+        if df['Chr'][i] == df['Chr'][i + 1]:
+            nextCNV = df['Start'][i + 1]
+            dist2next = nextCNV - df['End'][i]
+        elif df['Chr'][i] != df['Chr'][i + 1]:
             dist2next = float('inf')
         
         dist2CNV[i] = min(dist2prev, dist2next)
 
     return dist2CNV
 
-def listdfs(files):
-    dfs = []
-    for file in files:
-        if os.path.getsize(file) > 1:
-            dfs.append(pd.read_table(file))
-    return dfs
-
-def makefeatfile(df, centromere, ascat, gccontent):
+def makefeatfile(ascat, centromere, gccontent):
     centromere = pd.read_table(centromere, sep=' ')
     ascat = pd.read_table(ascat, sep=' ')
     gccontent = pd.read_table(gccontent, sep=' ')
-    df = relabelSC(df)
 
     feature_df = pd.DataFrame({
-              'Sample': df['sample'],
-                 'Chr': df['chr'],
-          'CopyNumber': df['nMajor'] + df['nMinor'], 
-         'SegmentSize': df['endpos'] - df['startpos'],
-     'Dist2Centromere': getDist2Centromere(df, centromere),
-              'SegVal': getSegVal(df, ascat),
-                 'LOH': getLOH(df),
-      'SizeDiploidSeg': getSizeofDiploidSeg(df),
-       'ChangepointCN': getCP(df),
-     'Dist2NearestCNV': getDist2CNV(df),
-        'GCcontentSeg': getGCcontent(df, gccontent)
+              'Sample': ascat['ID'],
+                 'Chr': ascat['Chr'],
+          'CN': ascat['cn'], 
+         'SegSize': ascat['End'] - ascat['Start'],
+     'Dist2Cent': getDist2Centromere(ascat, centromere),
+              'SegVal': getSegVal(ascat),
+                 'LOH': getLOH(ascat),
+      'SizeDipSeg': getSizeofDiploidSeg(ascat),
+       'CpCN': getCP(ascat),
+     'Dist2nCNV': getDist2CNV(ascat),
+        'GCcSeg': getGCcontent(ascat, gccontent)
      
     })
 
@@ -132,18 +123,38 @@ def makefeatfile(df, centromere, ascat, gccontent):
     return feature_df
 
 def discretize(df):
-    df['CopyNumber'] = df['CopyNumber'].round()
-    df['SegmentSize'] = pd.cut(
-        x=df['SegmentSize'], 
-        bins=[0, 1e5, 1e6, 3e6, 10e6, 5e7], 
-        labels=[1, 2, 3, 4, 5]
-        )
-    # df['Dist2Centromere'] = pd.cut(df['Dist2Centromere'], bins=[])
-    # df['SegVal']          = pd.cut(df['SegVal'], bins=[])
-    # df['LOH']             = pd.cut(df['LOH'], bins=[])
-    # df['SizeDiploidSeg']  = pd.cut(df['SizeDiploidSeg'], bins=[])
-    # df['ChangepointCN']   = pd.cut(df['ChangepointCN'], bins=[])
-    # df['Dist2NearestCNV'] = pd.cut(df['Dist2NearestCNV'], bins=[])
-    # df['GCcontentSeg']    = pd.cut(df['GCcontentSeg'], bins=[])
+    df['CN'] = df['CN'].round().astype(int)
+    df['SegSize'] = pd.cut(
+                        x=df['SegSize'], 
+                        bins=[0, 1e5, 1e6, 3e6, 1e7, 5e7, 1e1000], 
+                        labels=[1, 2, 3, 4, 5, 6]
+                        )
+    df['Dist2Cent'] = pd.qcut(
+                        x=df['Dist2Cent'], 
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
+                        )
+    df['SegVal'] = pd.qcut(
+                        x=df['SegVal'],
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6] 
+                        )
+    df['LOH'] = df['LOH'].round().astype(int)
+    df['SizeDipSeg'] = pd.qcut(
+                            x=df['SizeDipSeg'], 
+                            q=4,
+                            labels=[1, 2, 3, 4]
+                            )
+    df['CpCN'] = df['CpCN'].round().astype(int)
+    df['Dist2nCNV'] = pd.qcut(
+                        x=df['Dist2nCNV'], 
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
+                        )
+    df['GCcSeg'] = pd.qcut(
+                    x=df['GCcSeg'], 
+                    q=6,
+                    labels=[1, 2, 3, 4, 5, 6]
+                    )
 
     return df
