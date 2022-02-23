@@ -19,7 +19,7 @@ def update_ascat(samplefiles, ascat, output):
     outputs = [output]
     options = {
         'memory': '8g',
-        'walltime': '24:00:00'
+        'walltime': '7-00:00:00'
     }
     spec = f'''
     

@@ -1,6 +1,5 @@
 import argparse, glob
 import feature_func as features
-import pandas as pd
 
 parser = argparse.ArgumentParser(description='Create feature files')
 parser.add_argument('samplefiles', nargs='+', help='Input file of samples')
