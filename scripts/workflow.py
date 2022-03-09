@@ -10,20 +10,26 @@ sample = '/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA
 centromereinfo = '../data/chrominfo.snp6.txt'
 ascat = '../data/filteredAscat.txt'
 gc = '../data/gc.content.txt'
-output = '../steps/AllTCGA_features_mateo10.txt'
 updatedascat = '../data/filteredAscatRaw.txt'
 
+nfeat = 10
+features = f'../steps/discFeatures_{nfeat}.txt'
+# ncomponents = 8
+start = 6
+stop = 10
 
-def update_ascat(samplefiles, ascat, output):
+
+def update_ascat(samplefiles, ascat):
+    updatedascat = '../data/filteredAscatRaw.txt'
     inputs = [ascat]
-    outputs = [output]
+    outputs = [updatedascat]
     options = {
         'memory': '8g',
-        'walltime': '7-00:00:00'
+        'walltime': '4-00:00:00'
     }
     spec = f'''
     
-    python update_ascat.py {samplefiles} {ascat} {output}
+    python update_ascat.py {samplefiles} {ascat} {updatedascat}
 
     '''
 
@@ -34,23 +40,57 @@ def create_feature_file(ascat, centromere, gc, output):
     outputs = [output]
     options = {
         'memory': '5g',
-        'walltime': '05:00:00'
+        'walltime': '10:00:00'
     }
     
     spec = f'''
-
     python create_feature_file.py {ascat} {centromere} {gc} {output}
     
     '''
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
+def lda_analysis(features, ncomponents, nfeat):
+    outputname = f'../steps/ldares_{nfeat}_{ncomponents}.txt'
+
+    inputs = [features]
+    outputs = [outputname]
+    options = {
+        'memory': '10g',
+        'walltime': '5-00:00:00'
+    }
+
+    spec = f'''
+    
+    python lda_fit.py {features} {ncomponents} {outputname}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
+def nmf_analysis(features, ncomponents, nfeat):
+    outputname = f'../steps/nmfres_{nfeat}_{ncomponents}.txt'
+
+    inputs = [features]
+    outputs = [outputname]
+    options = {
+        'memory': '10g',
+        'walltime': '5-00:00:00'
+    }
+
+    spec = f'''
+    
+    python nmf_fit.py {features} {ncomponents} {outputname}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
 gwf.target_from_template(
-    name = 'UpdateAscat',
-    template = update_ascat(
+    name='UpdateAscat',
+    template=update_ascat(
         samplefiles=sample,
-        ascat=ascat,
-        output=updatedascat
+        ascat=ascat
     )
 )
 
@@ -60,6 +100,26 @@ gwf.target_from_template(
         ascat = updatedascat,
         centromere = centromereinfo,
         gc = gc,
-        output = output
+        output = features
     )
 )
+
+for i in range(start, stop + 1):
+
+    gwf.target_from_template(
+        name=f'LDA_{i}',
+        template=lda_analysis(
+            features=features,
+            ncomponents=i,
+            nfeat=nfeat
+        )
+    )
+
+    gwf.target_from_template(
+        name=f'NMF_{i}',
+        template=nmf_analysis(
+            features=features,
+            ncomponents=i,
+            nfeat=nfeat
+        )
+    )

@@ -2,15 +2,18 @@ import pandas as pd
 from sklearn.decomposition import LatentDirichletAllocation
 import argparse
 
-parser = argparse.ArgumentParser(description='Create feature files')
+parser = argparse.ArgumentParser(description='LDA Analysis')
 parser.add_argument('featurefile', help='Input file of discretized features')
 parser.add_argument('ncomponents', type=int, help='An integer specifying the number of components to use')
+parser.add_argument('outputfile', help='Name of the outputfile')
 
 args = parser.parse_args()
 
-def lda_fit(df, n_components):
+def lda_fit(file, n_components, output):
+    input = pd.read_table(file)
+
     # Removing columns with sample name and chromosome
-    X = df.drop(['Sample', 'Chr'], axis = 1)
+    X = input.drop(['Sample', 'Chr'], axis = 1)
     
     # Fitting the model using the features
     model = LatentDirichletAllocation(
@@ -21,11 +24,11 @@ def lda_fit(df, n_components):
             random_state=0
             )
 
-    fit = model.fit(X)
+    fit = model.fit_transform(X)
+    df = pd.DataFrame(fit)
+    df.to_csv(output, header=False, index=False, sep='\t')
     
     return fit
 
-file = pd.read_table(args.featurefile)
-
-lda_fit(file, args.ncomponents)
+lda_fit(args.featurefile, args.ncomponents, args.outputfile)
 

@@ -47,7 +47,7 @@ def getLOH(df):
     return LOH
 
 def getCP(df):
-    return df.groupby('Chr')['Chr'].transform('count') - 1
+    return df.groupby(['ID', 'Chr']).transform('count') - 1
 
 def getSizeofDiploidSeg(df):
     size_diploid = [0] * len(df)
@@ -100,21 +100,21 @@ def getDist2CNV(df):
 
 def makefeatfile(ascat, centromere, gccontent):
     centromere = pd.read_table(centromere, sep=' ')
-    ascat = pd.read_table(ascat, sep=' ')
+    ascat = pd.read_table(ascat, sep='\t')
     gccontent = pd.read_table(gccontent, sep=' ')
 
     feature_df = pd.DataFrame({
               'Sample': ascat['ID'],
                  'Chr': ascat['Chr'],
-          'CN': ascat['cn'], 
-         'SegSize': ascat['End'] - ascat['Start'],
-     'Dist2Cent': getDist2Centromere(ascat, centromere),
+                  'CN': ascat['cn'], 
+             'SegSize': ascat['End'] - ascat['Start'],
+           'Dist2Cent': getDist2Centromere(ascat, centromere),
               'SegVal': getSegVal(ascat),
                  'LOH': getLOH(ascat),
-      'SizeDipSeg': getSizeofDiploidSeg(ascat),
-       'CpCN': getCP(ascat),
-     'Dist2nCNV': getDist2CNV(ascat),
-        'GCcSeg': getGCcontent(ascat, gccontent)
+          'SizeDipSeg': getSizeofDiploidSeg(ascat),
+                'CpCN': getCP(ascat),
+           'Dist2nCNV': getDist2CNV(ascat),
+              'GCcSeg': getGCcontent(ascat, gccontent)
      
     })
 
