@@ -21,9 +21,10 @@ fullDF(args.ascat, args.centroinfo, args.gccontent, args.outputfile)
 
  
 # centromereinfo = '/home/janneae/cns/data/chrominfo.snp6.txt'
-# ascat = '/home/janneae/cns/data/filteredAscatRaw.txt'
+# ascat = '/home/janneae/cns/scripts/test.txt'
 # gc = '/home/janneae/cns/data/gc.content.txt'
-# output = '/home/janneae/cns/steps/test.txt'
+# nfeat = 10
+# featurefile = f'/home/janneae/cns/steps/discFeatures_{nfeat}.txt'
 
-# full = fullDF(ascat, centromereinfo, gc, output)
+# full = fullDF(ascat, centromereinfo, gc, featurefile)
 

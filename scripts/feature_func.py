@@ -47,7 +47,8 @@ def getLOH(df):
     return LOH
 
 def getCP(df):
-    return df.groupby(['ID', 'Chr']).transform('count') - 1
+    t = df.groupby(['ID', 'Chr'])['Chr'].transform('count') - 1
+    return df.groupby(['ID', 'Chr'])['Chr'].transform('count') - 1
 
 def getSizeofDiploidSeg(df):
     size_diploid = [0] * len(df)
@@ -142,8 +143,8 @@ def discretize(df):
     df['LOH'] = df['LOH'].round().astype(int)
     df['SizeDipSeg'] = pd.qcut(
                             x=df['SizeDipSeg'], 
-                            q=4,
-                            labels=[1, 2, 3, 4]
+                            q=3,
+                            labels=[1, 2, 3]
                             )
     df['CpCN'] = df['CpCN'].round().astype(int)
     df['Dist2nCNV'] = pd.qcut(

@@ -13,7 +13,7 @@ gc = '../data/gc.content.txt'
 updatedascat = '../data/filteredAscatRaw.txt'
 
 nfeat = 10
-features = f'../steps/discFeatures_{nfeat}.txt'
+featurefile = f'../steps/discFeatures_{nfeat}.txt'
 # ncomponents = 8
 start = 6
 stop = 10
@@ -100,7 +100,7 @@ gwf.target_from_template(
         ascat = updatedascat,
         centromere = centromereinfo,
         gc = gc,
-        output = features
+        output = featurefile
     )
 )
 
@@ -109,7 +109,7 @@ for i in range(start, stop + 1):
     gwf.target_from_template(
         name=f'LDA_{i}',
         template=lda_analysis(
-            features=features,
+            features=featurefile,
             ncomponents=i,
             nfeat=nfeat
         )
@@ -118,7 +118,7 @@ for i in range(start, stop + 1):
     gwf.target_from_template(
         name=f'NMF_{i}',
         template=nmf_analysis(
-            features=features,
+            features=featurefile,
             ncomponents=i,
             nfeat=nfeat
         )
