@@ -9,9 +9,11 @@ parser.add_argument('outputfile', help='Name of the outputfile')
 
 args = parser.parse_args()
 
-def nmf_fit(df, n_components, output):
+def nmf_fit(file, n_components, output):
+    input = pd.read_table(file)
+
     # Removing columns with sample name and chromosome
-    X = df.drop(['Sample', 'Chr'], axis = 1)
+    X = input.drop(['Sample', 'Chr'], axis = 1)
     
     # Fitting the model using the features
     model = NMF(

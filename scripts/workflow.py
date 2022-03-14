@@ -51,13 +51,13 @@ def create_feature_file(ascat, centromere, gc, output):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def lda_analysis(features, ncomponents, nfeat):
-    outputname = f'../steps/ldares_{nfeat}_{ncomponents}.txt'
+    outputname = f'../steps/lda/ldares_{nfeat}_{ncomponents}.txt'
 
     inputs = [features]
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '5-00:00:00'
+        'walltime': '3-00:00:00'
     }
 
     spec = f'''
@@ -69,13 +69,13 @@ def lda_analysis(features, ncomponents, nfeat):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def nmf_analysis(features, ncomponents, nfeat):
-    outputname = f'../steps/nmfres_{nfeat}_{ncomponents}.txt'
+    outputname = f'../steps/nmf/nmfres_{nfeat}_{ncomponents}.txt'
 
     inputs = [features]
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '5-00:00:00'
+        'walltime': '3-00:00:00'
     }
 
     spec = f'''
