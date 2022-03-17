@@ -8,7 +8,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='LDA Analysis')
 parser.add_argument('featurefile', help='Input file of discretized features')
-parser.add_argument('ncomponents', type=int, help='An integer specifying the number of components to use')
+parser.add_argument('ntopics', type=int, help='An integer specifying the maximum number of topics')
 parser.add_argument('outputfile', help='Name of the outputfile')
 
 args = parser.parse_args()
@@ -36,8 +36,8 @@ def jaccard_similarity(topic_1, topic_2):
     return float(len(intersection))/float(len(union))
 
 # Considering 1-15 topics, as the last is cut off
-num_topics = list(range(args.ncomponents + 1)[1:])
-num_keywords = args.ncomponents
+num_topics = list(range(args.ntopics + 1)[1:])
+num_keywords = args.ntopics
 
 LDA_models = {}
 LDA_topics = {}

@@ -16,7 +16,7 @@ nfeat = 10
 featurefile = f'../steps/discFeatures_{nfeat}.txt'
 # ncomponents = 8
 start = 2
-stop = 15
+ntopics = 15
 
 
 def update_ascat(samplefiles, ascat):
@@ -87,7 +87,7 @@ def nmf_analysis(features, ncomponents, nfeat):
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
-def gensim(features, ncomponents, nfeat):
+def gensim(features, ntopics, nfeat):
     outputname = f'../figures/optimalalpha_{nfeat}.pdf'
 
     inputs = [features]
@@ -99,7 +99,43 @@ def gensim(features, ncomponents, nfeat):
 
     spec = f'''
     
-    python gensimLDA.py {features} {ncomponents} {outputname}
+    python gensimLDA.py {features} {ntopics} {outputname}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
+def gensimLDA(features, ntopics, nfeat):
+    outputname = f'../steps/gensim/lda_t{ntopics}_f{nfeat}.model'
+
+    inputs = [features]
+    outputs = [outputname]
+    options = {
+        'memory': '10g',
+        'walltime': '3-00:00:00'
+    }
+
+    spec = f'''
+    
+    python gensimLDA2.py {features} {ntopics} {outputname}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
+def gensimHDP(features, nfeat):
+    outputname = f'../steps/gensim/hdp_f{nfeat}.model'
+
+    inputs = [features]
+    outputs = [outputname]
+    options = {
+        'memory': '10g',
+        'walltime': '7-00:00:00'
+    }
+
+    spec = f'''
+    
+    python gensimHDP.py {features} {outputname}
 
     '''
 
@@ -123,7 +159,7 @@ gwf.target_from_template(
     )
 )
 
-for i in range(start, stop + 1):
+for i in range(start, ntopics + 1):
 
     gwf.target_from_template(
         name=f'LDA_{i}',
@@ -143,11 +179,28 @@ for i in range(start, stop + 1):
         )
     )
 
+    gwf.target_from_template(
+        name=f'gensimLDA2_t{i}_f{nfeat}',
+        template=gensimLDA(
+            features=featurefile,
+            ntopics=i,
+            nfeat=nfeat
+        )
+    )
+
 gwf.target_from_template(
-    name=f'gensimLDA_15',
+    name=f'gensimLDA_t{ntopics}_f{nfeat}',
     template=gensim(
         features=featurefile,
-        ncomponents=i,
+        ntopics=4,
+        nfeat=nfeat
+    )
+)
+
+gwf.target_from_template(
+    name=f'gensimHDP_f{nfeat}',
+    template=gensimHDP(
+        features=featurefile,
         nfeat=nfeat
     )
 )
