@@ -15,8 +15,8 @@ updatedascat = '../data/filteredAscatRaw.txt'
 nfeat = 10
 featurefile = f'../steps/discFeatures_{nfeat}.txt'
 # ncomponents = 8
-start = 6
-stop = 10
+start = 2
+stop = 15
 
 
 def update_ascat(samplefiles, ascat):
@@ -86,6 +86,24 @@ def nmf_analysis(features, ncomponents, nfeat):
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
+def gensim(features, ncomponents, nfeat):
+    outputname = f'../figures/optimalalpha_{nfeat}.pdf'
+
+    inputs = [features]
+    outputs = [outputname]
+    options = {
+        'memory': '10g',
+        'walltime': '7-00:00:00'
+    }
+
+    spec = f'''
+    
+    python gensim.py {features} {ncomponents} {outputname}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
 gwf.target_from_template(
     name='UpdateAscat',
     template=update_ascat(
@@ -123,3 +141,12 @@ for i in range(start, stop + 1):
             nfeat=nfeat
         )
     )
+
+gwf.target_from_template(
+    name=f'gensimLDA_15',
+    template=gensim(
+        features=featurefile,
+        ncomponents=i,
+        nfeat=nfeat
+    )
+)

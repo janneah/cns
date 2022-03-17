@@ -14,7 +14,6 @@ def lda_fit(file, n_components, output):
 
     # Removing columns with sample name and chromosome
     X = input.drop(['Sample', 'Chr'], axis = 1)
-    
     # Fitting the model using the features
     model = LatentDirichletAllocation(
             n_components=n_components,

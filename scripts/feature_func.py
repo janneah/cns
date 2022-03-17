@@ -126,45 +126,46 @@ def makefeatfile(ascat, centromere, gccontent):
 def discretize(df):
     # df['CN'] = df['CN'].round().astype(int)
     df['CN'] = pd.cut(
-                    x=df['SegSize'], 
-                    bins=[0, 1, 2, 3, 4, 5, 6], 
-                    labels=["1", "2", "3", "4", "5"]
-                    )
+                        x=df['CN'], 
+                        bins=[0, 1, 2, 3, 4, 5, df['CN'].max()], 
+                        labels=[1, 2, 3, 4, 5, 6],
+                        include_lowest = True
+                        )
     df['SegSize'] = pd.cut(
                         x=df['SegSize'], 
                         bins=[0, 1e5, 1e6, 3e6, 1e7, 5e7, 1e1000], 
-                        labels=["1", "2", "3", "4", "5", "6"]
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     df['Dist2Cent'] = pd.qcut(
                         x=df['Dist2Cent'], 
                         q=6,
-                        labels=["1", "2", "3", "4", "5", "6"]
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     df['SegVal'] = pd.qcut(
                         x=df['SegVal'],
                         q=6,
-                        labels=["1", "2", "3", "4", "5", "6"] 
+                        labels=[1, 2, 3, 4, 5, 6] 
                         )
     df['LOH'] = df['LOH'].round().astype(int)
     df['SizeDipSeg'] = pd.qcut(
-                            x=df['SizeDipSeg'], 
-                            q=3,
-                            labels=["1", "2", "3"]
-                            )
+                        x=df['SizeDipSeg'], 
+                        q=3,
+                        labels=[1, 2, 3]
+                        )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
                         q=6,
-                        labels=["1", "2", "3", "4", "5", "6"] 
+                        labels=[1, 2, 3, 4, 5, 6] 
                         )
     df['Dist2nCNV'] = pd.qcut(
                         x=df['Dist2nCNV'], 
                         q=6,
-                        labels=["1", "2", "3", "4", "5", "6"]
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     df['GCcSeg'] = pd.qcut(
-                    x=df['GCcSeg'], 
-                    q=6,
-                    labels=["1", "2", "3", "4", "5", "6"]
-                    )
+                        x=df['GCcSeg'], 
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
+                        )
 
     return df
