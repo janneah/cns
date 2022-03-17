@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "gensim.py", line 5, in <module>
+    from gensim.models import LdaModel, CoherenceModel
+  File "/faststorage/project/CancerEvolution/Projects/janne_cns/cns/scripts/gensim.py", line 5, in <module>
+    from gensim.models import LdaModel, CoherenceModel
+ModuleNotFoundError: No module named 'gensim.models'; 'gensim' is not a package
