@@ -130,7 +130,7 @@ def gensimHDP(features, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '7-00:00:00'
+        'walltime': '1-00:00:00'
     }
 
     spec = f'''
