@@ -44,6 +44,7 @@ def create_feature_file(ascat, centromere, gc, output):
     }
     
     spec = f'''
+    
     python create_feature_file.py {ascat} {centromere} {gc} {output}
     
     '''
@@ -98,7 +99,7 @@ def gensim(features, ncomponents, nfeat):
 
     spec = f'''
     
-    python gensim.py {features} {ncomponents} {outputname}
+    python gensimLDA.py {features} {ncomponents} {outputname}
 
     '''
 
