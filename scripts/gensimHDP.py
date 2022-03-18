@@ -15,6 +15,10 @@ listedDf = df.values.tolist()
 
 dirichlet_dict = corpora.Dictionary(listedDf)
 bow_corpus = [dirichlet_dict.doc2bow(text) for text in listedDf]
-hdp_model = HdpModel(corpus=bow_corpus, id2word=dirichlet_dict)
+hdp_model = HdpModel(
+    corpus=bow_corpus, 
+    id2word=dirichlet_dict,
+    random_state=42
+    )
 
 hdp_model.save(args.outputfile)

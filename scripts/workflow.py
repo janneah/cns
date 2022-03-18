@@ -15,7 +15,7 @@ updatedascat = '../data/filteredAscatRaw.txt'
 nfeat = 10
 featurefile = f'../steps/discFeatures_{nfeat}.txt'
 # ncomponents = 8
-start = 2
+start = 1
 ntopics = 15
 
 
@@ -25,7 +25,8 @@ def update_ascat(samplefiles, ascat):
     outputs = [updatedascat]
     options = {
         'memory': '8g',
-        'walltime': '4-00:00:00'
+        'walltime': '4-00:00:00',
+        'account': 'CancerEvolution'
     }
     spec = f'''
     
@@ -40,7 +41,8 @@ def create_feature_file(ascat, centromere, gc, output):
     outputs = [output]
     options = {
         'memory': '5g',
-        'walltime': '10:00:00'
+        'walltime': '10:00:00',
+        'account': 'CancerEvolution'
     }
     
     spec = f'''
@@ -58,7 +60,8 @@ def lda_analysis(features, ncomponents, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '3-00:00:00'
+        'walltime': '3-00:00:00',
+        'account': 'CancerEvolution'
     }
 
     spec = f'''
@@ -76,7 +79,8 @@ def nmf_analysis(features, ncomponents, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '3-00:00:00'
+        'walltime': '3-00:00:00',
+        'account': 'CancerEvolution'
     }
 
     spec = f'''
@@ -94,7 +98,8 @@ def gensim(features, ntopics, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '7-00:00:00'
+        'walltime': '7-00:00:00',
+        'account': 'CancerEvolution'
     }
 
     spec = f'''
@@ -112,7 +117,8 @@ def gensimLDA(features, ntopics, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '3-00:00:00'
+        'walltime': '3-00:00:00',
+        'account': 'CancerEvolution'
     }
 
     spec = f'''
@@ -130,7 +136,8 @@ def gensimHDP(features, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '1-00:00:00'
+        'walltime': '1-00:00:00',
+        'account': 'CancerEvolution'
     }
 
     spec = f'''

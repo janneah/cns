@@ -50,3 +50,4 @@ scripts/.gwf/logs/UpdateAscat.stdout
 scripts/__pycache__/feature_func.cpython-38.pyc
 steps/discrete.txt
 data/filteredAscatRaw.txt
+figures/optimalalpha_10.pdf
