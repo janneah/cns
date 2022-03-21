@@ -20,6 +20,8 @@ modelNMF = Nmf(
         corpus=bow_corpus,
         id2word=dirichlet_dict,
         num_topics=args.ntopics,
+        chunksize=len(bow_corpus),
+        passes=20,
         random_state=42)
 
 modelNMF.save(args.outputfile)
