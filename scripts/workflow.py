@@ -61,7 +61,7 @@ def lda_analysis(features, ncomponents, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '3-00:00:00',
+        'walltime': '1-00:00:00',
         'account': 'CancerEvolution'
     }
 
@@ -80,7 +80,7 @@ def nmf_analysis(features, ncomponents, nfeat):
     outputs = [outputname]
     options = {
         'memory': '10g',
-        'walltime': '3-00:00:00',
+        'walltime': '1-00:00:00',
         'account': 'CancerEvolution'
     }
 
@@ -130,6 +130,25 @@ def gensimHDP(features, nfeat):
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
+def gensimNMF(features, ntopics, nfeat):
+    outputname = f'../steps/gensim/nmf_t{ntopics}_f{nfeat}.model'
+
+    inputs = [features]
+    outputs = [outputname]
+    options = {
+        'memory': '10g',
+        'walltime': '3-00:00:00',
+        'account': 'CancerEvolution'
+    }
+
+    spec = f'''
+    
+    python gensimNMF.py {features} {ntopics} {outputname}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
 gwf.target_from_template(
     name='UpdateAscat',
     template=update_ascat(
@@ -171,6 +190,15 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
+            features=inputfeaturefile,
+            ntopics=i,
+            nfeat=nfeat
+        )
+    )
+
+    gwf.target_from_template(
+        name=f'gensimNMF_t{i}_f{nfeat}',
+        template=gensimNMF(
             features=inputfeaturefile,
             ntopics=i,
             nfeat=nfeat
