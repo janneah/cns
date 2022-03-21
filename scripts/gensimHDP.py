@@ -18,6 +18,7 @@ bow_corpus = [dirichlet_dict.doc2bow(text) for text in listedDf]
 hdp_model = HdpModel(
     corpus=bow_corpus, 
     id2word=dirichlet_dict,
+    # D, T
     random_state=42
     )
 

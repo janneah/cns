@@ -13,7 +13,8 @@ gc = '../data/gc.content.txt'
 updatedascat = '../data/filteredAscatRaw.txt'
 
 nfeat = 10
-featurefile = f'../steps/discFeatures_{nfeat}.txt'
+inputfeaturefile = f'../steps/discretized_9.features'
+featurefile = f'../steps/nondiscretized_9.features'
 # ncomponents = 8
 start = 1
 ntopics = 15
@@ -91,25 +92,6 @@ def nmf_analysis(features, ncomponents, nfeat):
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
-def gensim(features, ntopics, nfeat):
-    outputname = f'../figures/optimalalpha_{nfeat}.pdf'
-
-    inputs = [features]
-    outputs = [outputname]
-    options = {
-        'memory': '10g',
-        'walltime': '7-00:00:00',
-        'account': 'CancerEvolution'
-    }
-
-    spec = f'''
-    
-    python gensimLDA.py {features} {ntopics} {outputname}
-
-    '''
-
-    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
-
 def gensimLDA(features, ntopics, nfeat):
     outputname = f'../steps/gensim/lda_t{ntopics}_f{nfeat}.model'
 
@@ -123,7 +105,7 @@ def gensimLDA(features, ntopics, nfeat):
 
     spec = f'''
     
-    python gensimLDA2.py {features} {ntopics} {outputname}
+    python gensimLDA.py {features} {ntopics} {outputname}
 
     '''
 
@@ -187,27 +169,18 @@ for i in range(start, ntopics + 1):
     )
 
     gwf.target_from_template(
-        name=f'gensimLDA2_t{i}_f{nfeat}',
+        name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
-            features=featurefile,
+            features=inputfeaturefile,
             ntopics=i,
             nfeat=nfeat
         )
     )
 
 gwf.target_from_template(
-    name=f'gensimLDA_t{ntopics}_f{nfeat}',
-    template=gensim(
-        features=featurefile,
-        ntopics=4,
-        nfeat=nfeat
-    )
-)
-
-gwf.target_from_template(
     name=f'gensimHDP_f{nfeat}',
     template=gensimHDP(
-        features=featurefile,
+        features=inputfeaturefile,
         nfeat=nfeat
     )
 )
