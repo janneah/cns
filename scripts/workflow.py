@@ -112,7 +112,7 @@ def gensimLDA(features, ntopics, nfeat):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimHDP(features, nfeat):
-    outputname = f'../steps/gensim/hdp_f{nfeat}.model'
+    outputname = f'../steps/gensim/hdp/hdp_f{nfeat}.model'
 
     inputs = [features]
     outputs = [outputname]
@@ -131,7 +131,7 @@ def gensimHDP(features, nfeat):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimNMF(features, ntopics, nfeat):
-    outputname = f'../steps/gensim/nmf_t{ntopics}_f{nfeat}.model'
+    outputname = f'../steps/gensim//nmf/nmf_t{ntopics}_f{nfeat}.model'
 
     inputs = [features]
     outputs = [outputname]
