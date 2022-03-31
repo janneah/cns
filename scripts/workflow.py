@@ -5,19 +5,20 @@ gwf = Workflow()
 """
 Workflow for LDA analysis of ASCAT data
 """
-
+# Various input files
 sample = '/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA/TCGA*.segments.raw.txt' 
 centromereinfo = '../data/chrominfo.snp6.txt'
 ascat = '../data/filteredAscat.txt'
 gc = '../data/gc.content.txt'
 updatedascat = '../data/filteredAscatRaw.txt'
 
+# Various parameters
 nfeat = 10
-inputfeaturefile = f'../steps/discretized_9.features'
-featurefile = f'../steps/nondiscretized_9.features'
-# ncomponents = 8
+featurefile = f'../steps/discretized_9.features'
+sampledascat = '../steps/ascat_100_samples.txt'
 start = 1
-ntopics = 15
+ntopics = 20
+nsamples = 100
 
 
 def update_ascat(samplefiles, ascat):
@@ -32,6 +33,22 @@ def update_ascat(samplefiles, ascat):
     spec = f'''
     
     python update_ascat.py {samplefiles} {ascat} {updatedascat}
+
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
+def sample_ascat(ascat, nsamples, output):
+    inputs = [ascat]
+    outputs = [output]
+    options = {
+        'memory': '8g',
+        'walltime': '02:00:00',
+        'account': 'CancerEvolution'
+    }
+    spec = f'''
+    
+    python sample_ascat.py {ascat} {nsamples} {output}
 
     '''
 
@@ -158,9 +175,18 @@ gwf.target_from_template(
 )
 
 gwf.target_from_template(
+    name='SampleAscat',
+    template=sample_ascat(
+        ascat=ascat,
+        nsamples=nsamples,
+        output=sampledascat
+    )
+)
+
+gwf.target_from_template(
     name='CreateFeatures',
     template=create_feature_file(
-        ascat = updatedascat,
+        ascat = sampledascat,
         centromere = centromereinfo,
         gc = gc,
         output = featurefile
@@ -169,28 +195,28 @@ gwf.target_from_template(
 
 for i in range(start, ntopics + 1):
 
-    gwf.target_from_template(
-        name=f'LDA_{i}',
-        template=lda_analysis(
-            features=featurefile,
-            ncomponents=i,
-            nfeat=nfeat
-        )
-    )
+    # gwf.target_from_template(
+    #     name=f'LDA_{i}',
+    #     template=lda_analysis(
+    #         features=featurefile,
+    #         ncomponents=i,
+    #         nfeat=nfeat
+    #     )
+    # )
 
-    gwf.target_from_template(
-        name=f'NMF_{i}',
-        template=nmf_analysis(
-            features=featurefile,
-            ncomponents=i,
-            nfeat=nfeat
-        )
-    )
+    # gwf.target_from_template(
+    #     name=f'NMF_{i}',
+    #     template=nmf_analysis(
+    #         features=featurefile,
+    #         ncomponents=i,
+    #         nfeat=nfeat
+    #     )
+    # )
 
     gwf.target_from_template(
         name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
-            features=inputfeaturefile,
+            features=featurefile,
             ntopics=i,
             nfeat=nfeat
         )
@@ -199,7 +225,7 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimNMF_t{i}_f{nfeat}',
         template=gensimNMF(
-            features=inputfeaturefile,
+            features=featurefile,
             ntopics=i,
             nfeat=nfeat
         )
@@ -208,7 +234,7 @@ for i in range(start, ntopics + 1):
 gwf.target_from_template(
     name=f'gensimHDP_f{nfeat}',
     template=gensimHDP(
-        features=inputfeaturefile,
+        features=featurefile,
         nfeat=nfeat
     )
 )
