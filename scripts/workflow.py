@@ -14,12 +14,12 @@ updatedascat = '../data/filteredAscatRaw.txt'
 
 # Various parameters
 nfeat = 10
-featurefile = f'../steps/discretized_9.features'
-sampledascat = '../steps/ascat_100_samples.txt'
 start = 1
 ntopics = 20
-nsamples = 100
+nsamples = 0.7
 
+featurefile = f'../steps/discretized_9.features'
+sampledascat = f'../steps/sampled_{nsamples}.ascat'
 
 def update_ascat(samplefiles, ascat):
     updatedascat = '../data/filteredAscatRaw.txt'
