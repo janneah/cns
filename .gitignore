@@ -56,3 +56,5 @@ steps/gensim/hdp/hdp_f10.model
 steps/gensim/hdp/hdp_f10.model.lda_beta.npy
 steps/gensim/hdp/hdp_f10.model.m_Elogbeta.npy
 steps/gensim/hdp/hdp_f10.model.m_lambda.npy
+steps/gensim/hdp/hdp_f10.model
+steps/gensim/hdp/hdp_f10.model
