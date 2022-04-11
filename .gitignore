@@ -51,3 +51,8 @@ scripts/__pycache__/feature_func.cpython-38.pyc
 steps/discrete.txt
 data/filteredAscatRaw.txt
 figures/optimalalpha_10.pdf
+steps/sampled_0.7.ascat
+steps/gensim/hdp/hdp_f10.model
+steps/gensim/hdp/hdp_f10.model.lda_beta.npy
+steps/gensim/hdp/hdp_f10.model.m_Elogbeta.npy
+steps/gensim/hdp/hdp_f10.model.m_lambda.npy
