@@ -12,7 +12,7 @@ args = parser.parse_args()
 def fullDF(ascat, centroinfo, gccontent, output):
     feature_df = features.makefeatfile(ascat, centroinfo, gccontent)
 
-    # feature_df = features.discretize(feature_df)
+    feature_df = features.discretize(feature_df)
     feature_df.to_csv(output, header=True, index=False, sep='\t')
 
     return feature_df
