@@ -216,7 +216,7 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
-            features=sampledascat,
+            features=featurefile,
             ntopics=i,
             nfeat=nfeat
         )
@@ -225,7 +225,7 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimNMF_t{i}_f{nfeat}',
         template=gensimNMF(
-            features=sampledascat,
+            features=featurefile,
             ntopics=i,
             nfeat=nfeat
         )
@@ -234,7 +234,7 @@ for i in range(start, ntopics + 1):
 gwf.target_from_template(
     name=f'gensimHDP_f{nfeat}',
     template=gensimHDP(
-        features=sampledascat,
+        features=featurefile,
         nfeat=nfeat
     )
 )

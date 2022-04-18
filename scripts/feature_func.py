@@ -151,7 +151,8 @@ def discretize(df):
     df['SizeDipSeg'] = pd.cut(
                         x=df['SizeDipSeg'],
                         bins=[0, 1, 5e7, 1e8, 3e8],
-                        labels=[1, 2, 3, 4]
+                        labels=[1, 2, 3, 4],
+                        include_lowest=True
                         )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
