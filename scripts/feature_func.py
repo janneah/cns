@@ -134,7 +134,8 @@ def discretize(df):
     df['SegSize'] = pd.cut(
                         x=df['SegSize'], 
                         bins=[0, 1e5, 1e6, 3e6, 1e7, 5e7, 1e1000], 
-                        labels=[1, 2, 3, 4, 5, 6]
+                        labels=[1, 2, 3, 4, 5, 6],
+                        include_lowest=True
                         )
     df['Dist2Cent'] = pd.qcut(
                         x=df['Dist2Cent'], 
@@ -149,7 +150,7 @@ def discretize(df):
     df['LOH'] = df['LOH'].round().astype(int)
     df['SizeDipSeg'] = pd.cut(
                         x=df['SizeDipSeg'],
-                        bins=[0, 1, 5e7, 1e8, df['SizeDipSeg'].max()], 
+                        bins=[0, 1, 5e7, 1e8, 3e8],
                         labels=[1, 2, 3, 4]
                         )
     df['CpCN'] = pd.qcut(
