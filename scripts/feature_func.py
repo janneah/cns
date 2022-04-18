@@ -147,10 +147,10 @@ def discretize(df):
                         labels=[1, 2, 3, 4, 5, 6] 
                         )
     df['LOH'] = df['LOH'].round().astype(int)
-    df['SizeDipSeg'] = pd.qcut(
-                        x=df['SizeDipSeg'], 
-                        q=3,
-                        labels=[1, 2, 3]
+    df['SizeDipSeg'] = pd.cut(
+                        x=df['SizeDipSeg'],
+                        bins=[0, 1, 5e7, 1e8, df['SizeDipSeg'].max()], 
+                        labels=[1, 2, 3, 4]
                         )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
