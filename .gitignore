@@ -81,3 +81,7 @@ steps/gensim/nmf/nmf_t16_f10.model
 steps/gensim/nmf/nmf_t17_f10.model
 steps/gensim/nmf/nmf_t18_f10.model
 steps/gensim/nmf/nmf_t19_f10.model
+data/all_muts_pass_and_polyphen.txt
+data/all_tcga_gene_exp.txt
+data/all_tcga_cin_measures.txt
+data/all_tcga_maf_summary.txt
