@@ -110,7 +110,7 @@ def nmf_analysis(features, ncomponents, nfeat):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimLDA(features, ntopics, nfeat):
-    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}.model'
+    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}_asym.model'
 
     inputs = [features]
     outputs = [outputname]
@@ -214,7 +214,7 @@ for i in range(start, ntopics + 1):
     # )
 
     gwf.target_from_template(
-        name=f'gensimLDA_t{i}_f{nfeat}',
+        name=f'gensimLDA_t{i}_f{nfeat}_tweak',
         template=gensimLDA(
             features=featurefile,
             ntopics=i,

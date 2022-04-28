@@ -22,10 +22,10 @@ modelLDA = LdaModel(
         corpus=bow_corpus,
         id2word=dirichlet_dict,
         num_topics=args.ntopics,
+        update_every=1,
         chunksize=len(bow_corpus),
         passes=10,
-        alpha='asymmetric',
-        eta='symmetric',
+        alpha='symmetric',
         random_state=42)
 
 modelLDA.save(args.outputfile)
