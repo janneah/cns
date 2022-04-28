@@ -85,3 +85,7 @@ data/all_muts_pass_and_polyphen.txt
 data/all_tcga_gene_exp.txt
 data/all_tcga_cin_measures.txt
 data/all_tcga_maf_summary.txt
+data/all_tcga_maf.txt
+data/sanchez_vega_pws_1026.csv
+data/cin_locations.txt
+data/test.txt
