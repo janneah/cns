@@ -11,6 +11,7 @@ centromereinfo = '../data/chrominfo.snp6.txt'
 ascat = '../data/filteredAscat.txt'
 gc = '../data/gc.content.txt'
 updatedascat = '../data/filteredAscatRaw.txt'
+repeats = '../data/repeats.txt'
 
 # Various parameters
 nfeat = 10
@@ -18,7 +19,8 @@ start = 1
 ntopics = 15
 nsamples = 0.7
 
-featurefile = f'../steps/discretized_9.features'
+featurefile = f'../steps/discretized_{nfeat}.features'
+correct_features = '/home/janneae/cns/steps/discretized_9_6bins.features' # Temp for LDA
 sampledascat = f'../steps/sampled_{nsamples}.ascat'
 
 def update_ascat(samplefiles, ascat):
@@ -54,8 +56,8 @@ def sample_ascat(ascat, nsamples, output):
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
-def create_feature_file(ascat, centromere, gc, output): 
-    inputs = [centromere, ascat, gc]
+def create_feature_file(ascat, centromere, gc, repeats, output): 
+    inputs = [centromere, ascat, gc, repeats]
     outputs = [output]
     options = {
         'memory': '5g',
@@ -65,46 +67,8 @@ def create_feature_file(ascat, centromere, gc, output):
     
     spec = f'''
     
-    python create_feature_file.py {ascat} {centromere} {gc} {output}
+    python create_feature_file.py {ascat} {centromere} {gc} {repeats} {output}
     
-    '''
-
-    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
-
-def lda_analysis(features, ncomponents, nfeat):
-    outputname = f'../steps/lda/ldares_{nfeat}_{ncomponents}.txt'
-
-    inputs = [features]
-    outputs = [outputname]
-    options = {
-        'memory': '10g',
-        'walltime': '1-00:00:00',
-        'account': 'CancerEvolution'
-    }
-
-    spec = f'''
-    
-    python lda_fit.py {features} {ncomponents} {outputname}
-
-    '''
-
-    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
-
-def nmf_analysis(features, ncomponents, nfeat):
-    outputname = f'../steps/nmf/nmfres_{nfeat}_{ncomponents}.txt'
-
-    inputs = [features]
-    outputs = [outputname]
-    options = {
-        'memory': '10g',
-        'walltime': '1-00:00:00',
-        'account': 'CancerEvolution'
-    }
-
-    spec = f'''
-    
-    python nmf_fit.py {features} {ncomponents} {outputname}
-
     '''
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
@@ -189,34 +153,17 @@ gwf.target_from_template(
         ascat = sampledascat,
         centromere = centromereinfo,
         gc = gc,
+        repeats = repeats,
         output = featurefile
     )
 )
 
 for i in range(start, ntopics + 1):
 
-    # gwf.target_from_template(
-    #     name=f'LDA_{i}',
-    #     template=lda_analysis(
-    #         features=featurefile,
-    #         ncomponents=i,
-    #         nfeat=nfeat
-    #     )
-    # )
-
-    # gwf.target_from_template(
-    #     name=f'NMF_{i}',
-    #     template=nmf_analysis(
-    #         features=featurefile,
-    #         ncomponents=i,
-    #         nfeat=nfeat
-    #     )
-    # )
-
     gwf.target_from_template(
         name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
-            features=featurefile,
+            features=correct_features,
             ntopics=i,
             nfeat=nfeat
         )
@@ -225,7 +172,7 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimNMF_t{i}_f{nfeat}',
         template=gensimNMF(
-            features=featurefile,
+            features=correct_features,
             ntopics=i,
             nfeat=nfeat
         )
@@ -234,7 +181,7 @@ for i in range(start, ntopics + 1):
 gwf.target_from_template(
     name=f'gensimHDP_f{nfeat}',
     template=gensimHDP(
-        features=featurefile,
+        features=correct_features,
         nfeat=nfeat
     )
 )

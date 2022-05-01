@@ -99,10 +99,29 @@ def getDist2CNV(df):
 
     return dist2CNV
 
-def makefeatfile(ascat, centromere, gccontent):
+def no_repeats(ascat, line1):   
+    reps = [0] * len(ascat)
+    line1 = line1[line1['repFamily']=='L1'].reset_index()
+    line1['Chr'] = line1['genoName'].str.split('_').str[0].str.extract('(\d+)', expand=False).dropna().astype(int)
+
+    for i in range(0, len(ascat)):
+        count = 0
+        for j in range(0, len(line1)):
+            if line1['Chr'][j] == ascat['Chr'][i] and line1['genoStart'][j] >= ascat['Start'][i] and line1['genoStart'][j] < ascat['End'][i]:
+                count += 1
+            elif line1['Chr'][j] == ascat['Chr'][i] and line1['genoStart'][j] < ascat['Start'][i] and line1['genoEnd'][j] > ascat['Start'][i]:
+                count += 1
+            else:
+                continue
+        reps[i] = count
+    
+    return reps
+
+def makefeatfile(ascat, centromere, gccontent, repeats):
     centromere = pd.read_table(centromere, sep=' ')
     ascat = pd.read_table(ascat, sep='\t')
     gccontent = pd.read_table(gccontent, sep=' ')
+    repeats = pd.read_table(repeats, sep='\t')
 
     feature_df = pd.DataFrame({
               'Sample': ascat['ID'],
@@ -115,7 +134,8 @@ def makefeatfile(ascat, centromere, gccontent):
           'SizeDipSeg': getSizeofDiploidSeg(ascat),
                 'CpCN': getCP(ascat),
            'Dist2nCNV': getDist2CNV(ascat),
-              'GCcSeg': getGCcontent(ascat, gccontent)
+              'GCcSeg': getGCcontent(ascat, gccontent),
+           'NoRepeats': no_repeats(ascat, repeats)
      
     })
 
@@ -139,13 +159,13 @@ def discretize(df):
                         )
     df['Dist2Cent'] = pd.qcut(
                         x=df['Dist2Cent'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=8,
+                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
                         )
     df['SegVal'] = pd.qcut(
                         x=df['SegVal'],
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6] 
+                        q=8,
+                        labels=[1, 2, 3, 4, 5, 6, 7, 8] 
                         )
     df['LOH'] = df['LOH'].round().astype(int)
     df['SizeDipSeg'] = pd.cut(
@@ -156,18 +176,23 @@ def discretize(df):
                         )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6] 
+                        q=8,
+                        labels=[1, 2, 3, 4, 5, 6, 7, 8] 
                         )
     df['Dist2nCNV'] = pd.qcut(
                         x=df['Dist2nCNV'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=8,
+                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
                         )
     df['GCcSeg'] = pd.qcut(
                         x=df['GCcSeg'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=8,
+                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
+                        )
+    df['NoRepeats'] = pd.qcut(
+                        x=df['NoRepeats'], 
+                        q=8,
+                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
                         )
 
     return df
