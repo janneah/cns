@@ -89,3 +89,39 @@ data/all_tcga_maf.txt
 data/sanchez_vega_pws_1026.csv
 data/cin_locations.txt
 data/test.txt
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+scripts/.gwf/logs/gensimLDA_t1_f10.stderr
+scripts/.gwf/logs/gensimLDA_t1_f10.stdout
+scripts/.gwf/logs/gensimLDA_t2_f10.stderr
+scripts/.gwf/logs/gensimLDA_t2_f10.stdout
+scripts/.gwf/logs/gensimLDA_t3_f10.stderr
+scripts/.gwf/logs/gensimLDA_t3_f10.stdout
+scripts/.gwf/logs/gensimLDA_t4_f10.stderr
+scripts/.gwf/logs/gensimLDA_t4_f10.stdout
+scripts/.gwf/logs/gensimLDA_t5_f10.stderr
+scripts/.gwf/logs/gensimLDA_t5_f10.stdout
+scripts/.gwf/logs/gensimLDA_t6_f10.stderr
+scripts/.gwf/logs/gensimLDA_t6_f10.stdout
+scripts/.gwf/logs/gensimLDA_t7_f10.stderr
+scripts/.gwf/logs/gensimLDA_t7_f10.stdout
+scripts/.gwf/logs/gensimLDA_t8_f10.stderr
+scripts/.gwf/logs/gensimLDA_t8_f10.stdout
+scripts/.gwf/logs/gensimLDA_t9_f10.stderr
+scripts/.gwf/logs/gensimLDA_t9_f10.stdout
+scripts/.gwf/logs/gensimLDA_t10_f10.stderr
+scripts/.gwf/logs/gensimLDA_t10_f10.stdout
+scripts/.gwf/logs/gensimLDA_t11_f10.stderr
+scripts/.gwf/logs/gensimLDA_t11_f10.stdout
+scripts/.gwf/logs/gensimLDA_t12_f10.stderr
+scripts/.gwf/logs/gensimLDA_t12_f10.stdout
+scripts/.gwf/logs/gensimLDA_t13_f10.stderr
+scripts/.gwf/logs/gensimLDA_t13_f10.stdout
+scripts/.gwf/logs/gensimLDA_t14_f10.stderr
+scripts/.gwf/logs/gensimLDA_t14_f10.stdout
+scripts/.gwf/logs/gensimLDA_t15_f10.stderr
+scripts/.gwf/logs/gensimLDA_t15_f10.stdout
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
