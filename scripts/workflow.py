@@ -74,7 +74,7 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimLDA(features, ntopics, nfeat):
-    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}.model'
+    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}_8bins.model'
 
     inputs = [features]
     outputs = [outputname]
@@ -163,7 +163,7 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
-            features=correct_features,
+            features=featurefile,
             ntopics=i,
             nfeat=nfeat
         )
@@ -172,7 +172,7 @@ for i in range(start, ntopics + 1):
     gwf.target_from_template(
         name=f'gensimNMF_t{i}_f{nfeat}',
         template=gensimNMF(
-            features=correct_features,
+            features=featurefile,
             ntopics=i,
             nfeat=nfeat
         )
@@ -181,7 +181,7 @@ for i in range(start, ntopics + 1):
 gwf.target_from_template(
     name=f'gensimHDP_f{nfeat}',
     template=gensimHDP(
-        features=correct_features,
+        features=featurefile,
         nfeat=nfeat
     )
 )
