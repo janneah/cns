@@ -60,8 +60,8 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
     inputs = [centromere, ascat, gc, repeats]
     outputs = [output]
     options = {
-        'memory': '5g',
-        'walltime': '10:00:00',
+        'memory': '10g',
+        'walltime': '2-00:00:00',
         'account': 'CancerEvolution'
     }
     
