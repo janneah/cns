@@ -194,5 +194,16 @@ def discretize(df):
                         q=8,
                         labels=[1, 2, 3, 4, 5, 6, 7, 8]
                         )
+    
+    df['CN'] = 'CN_' + df['CN'].astype(str)
+    df['SegSize'] = 'SegSize_' + df['SegSize'].astype(str)
+    df['Dist2Cent'] = 'Dist2Cent_' + df['Dist2Cent'].astype(str)
+    df['SegVal'] = 'SegVal_' + df['SegVal'].astype(str)
+    df['LOH'] = 'LOH_' + df['LOH'].astype(str)
+    df['SizeDipSeg'] = 'SizeDipSeg_' + df['SizeDipSeg'].astype(str)
+    df['CpCN'] = 'CpCN_' + df['CpCN'].astype(str)
+    df['Dist2nCNV'] = 'Dist2CNV_' + df['Dist2nCNV'].astype(str)
+    df['GCcSeg'] = 'GCcSeg_' + df['GCcSeg'].astype(str)
+    df['NoRepeats'] = 'NoRepeats_' + df['NoRepeats'].astype(str)
 
     return df
