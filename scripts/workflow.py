@@ -22,6 +22,8 @@ nsamples = 0.7
 featurefile = f'../steps/discretized_{nfeat}.features'
 correct_features = '/home/janneae/cns/steps/discretized_9_6bins.features' # Temp for LDA
 sampledascat = f'../steps/sampled_{nsamples}.ascat'
+remaining30ascat = '../steps/sampled_0.3.ascat'
+test30 = '../steps/discretized_{nfeat}_0.3.features'
 
 def update_ascat(samplefiles, ascat):
     updatedascat = '../data/filteredAscatRaw.txt'
@@ -155,6 +157,17 @@ gwf.target_from_template(
         gc = gc,
         repeats = repeats,
         output = featurefile
+    )
+)
+
+gwf.target_from_template(
+    name='CreateFeatures30',
+    template=create_feature_file(
+        ascat = remaining30ascat,
+        centromere = centromereinfo,
+        gc = gc,
+        repeats = repeats,
+        output = test30
     )
 )
 
