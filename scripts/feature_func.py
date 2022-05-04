@@ -103,7 +103,7 @@ def no_repeats(ascat, line1):
     reps = [0] * len(ascat)
     line1 = line1[line1['repFamily']=='L1'].reset_index()
     line1['Chr'] = line1['genoName'].str.split('_').str[0].str.extract('(\d+)', expand=False).dropna().astype(int)
-    line1=line1[0:100]
+    
     for i in range(0, len(ascat)):
         count = 0
         for j in range(0, len(line1)):
@@ -159,13 +159,13 @@ def discretize(df):
                         )
     df['Dist2Cent'] = pd.qcut(
                         x=df['Dist2Cent'], 
-                        q=8,
-                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     df['SegVal'] = pd.qcut(
                         x=df['SegVal'],
-                        q=8,
-                        labels=[1, 2, 3, 4, 5, 6, 7, 8] 
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6] 
                         )
     df['LOH'] = df['LOH'].round().astype(int)
     df['SizeDipSeg'] = pd.cut(
@@ -176,23 +176,23 @@ def discretize(df):
                         )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
-                        q=8,
-                        labels=[1, 2, 3, 4, 5, 6, 7, 8] 
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6] 
                         )
     df['Dist2nCNV'] = pd.qcut(
                         x=df['Dist2nCNV'], 
-                        q=8,
-                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     df['GCcSeg'] = pd.qcut(
                         x=df['GCcSeg'], 
-                        q=8,
-                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     df['NoRepeats'] = pd.qcut(
                         x=df['NoRepeats'], 
-                        q=8,
-                        labels=[1, 2, 3, 4, 5, 6, 7, 8]
+                        q=6,
+                        labels=[1, 2, 3, 4, 5, 6]
                         )
     
     df['CN'] = 'CN_' + df['CN'].astype(str)

@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import os, argparse
+import argparse
 
 parser = argparse.ArgumentParser(description='Take a subset of x samples from each cancertype')
 parser.add_argument('ascat', help='Input file of samples')
@@ -9,19 +9,16 @@ parser.add_argument('output')
 
 args = parser.parse_args()
 
-
 def sample(df, nsamples):
     cancertypes = np.unique(df['cancer_type'])
-    samples = df.groupby(['ID'])
-    
+    new_df = df.drop_duplicates(subset='ID')
     sampled_df = []
+
     for i in range(len(cancertypes)):
-        subset = df[df.cancer_type == cancertypes[i]].sample(frac=float(nsamples), random_state=17).values.tolist()
-        for j in subset:
-            sampled_df.append(j)
+        subset = list(new_df[new_df.cancer_type == cancertypes[i]].sample(frac=float(nsamples), replace=False, random_state=17)['ID'])
+        sampled_df.extend(subset)
     
-    subset_df = pd.DataFrame(sampled_df, columns=df.columns)
-    final_df = df[df['ID'].isin(subset_df['ID'])]
+    final_df = df[df['ID'].isin(sampled_df)]
     
     return final_df
 

@@ -10,7 +10,6 @@ sample = '/home/janneae/TCGA/DerivedData/PanCancer/TCGA_ASCAT_RAW_PVL/ASCAT_TCGA
 centromereinfo = '../data/chrominfo.snp6.txt'
 ascat = '../data/filteredAscat.txt'
 gc = '../data/gc.content.txt'
-updatedascat = '../data/filteredAscatRaw.txt'
 repeats = '../data/repeats.txt'
 
 # Various parameters
@@ -19,14 +18,16 @@ start = 1
 ntopics = 15
 nsamples = 0.1
 
-featurefile = f'../steps/discretized_{nfeat}.features'
-correct_features = '/home/janneae/cns/steps/discretized_9_6bins.features' # Temp for LDA
+# Intermediary files
 sampledascat = f'../steps/sampled_{nsamples}.ascat'
-remaining30ascat = '../steps/sampled_0.3.ascat'
-test30 = '../steps/discretized_{nfeat}_0.3.features'
+updatedascat = '../data/filteredAscatRaw.txt'
+featurefile = f'../steps/discretized_{nfeat}_{nsamples}.features'
 
-def update_ascat(samplefiles, ascat):
-    updatedascat = '../data/filteredAscatRaw.txt'
+# Validation input and output
+remaining30ascat = '../steps/sampled_0.3.ascat'
+validation_featurefile = f'../steps/discretized_{nfeat}_0.3.features'
+
+def update_ascat(samplefiles, ascat, updatedascat):
     inputs = [ascat]
     outputs = [updatedascat]
     options = {
@@ -63,7 +64,7 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
     outputs = [output]
     options = {
         'memory': '10g',
-        'walltime': '7-00:00:00',
+        'walltime': '4-00:00:00',
         'account': 'CancerEvolution'
     }
     
@@ -136,7 +137,8 @@ gwf.target_from_template(
     name='UpdateAscat',
     template=update_ascat(
         samplefiles=sample,
-        ascat=ascat
+        ascat=ascat,
+        updatedascat=updatedascat
     )
 )
 
@@ -161,13 +163,13 @@ gwf.target_from_template(
 )
 
 gwf.target_from_template(
-    name='CreateFeatures30',
+    name='CreateFeaturesValidation',
     template=create_feature_file(
         ascat = remaining30ascat,
         centromere = centromereinfo,
         gc = gc,
         repeats = repeats,
-        output = test30
+        output = validation_featurefile
     )
 )
 
