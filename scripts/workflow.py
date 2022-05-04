@@ -17,7 +17,7 @@ repeats = '../data/repeats.txt'
 nfeat = 10
 start = 1
 ntopics = 15
-nsamples = 0.7
+nsamples = 0.1
 
 featurefile = f'../steps/discretized_{nfeat}.features'
 correct_features = '/home/janneae/cns/steps/discretized_9_6bins.features' # Temp for LDA
@@ -63,7 +63,7 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
     outputs = [output]
     options = {
         'memory': '10g',
-        'walltime': '2-00:00:00',
+        'walltime': '7-00:00:00',
         'account': 'CancerEvolution'
     }
     
@@ -143,7 +143,7 @@ gwf.target_from_template(
 gwf.target_from_template(
     name='SampleAscat',
     template=sample_ascat(
-        ascat=ascat,
+        ascat=updatedascat,
         nsamples=nsamples,
         output=sampledascat
     )

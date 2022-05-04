@@ -24,8 +24,8 @@ def raw(samples, ascat, output):
             if df['sample'][0] == ascat['ID'][i]:
                 nAraw = df.loc[(df['startpos'] == ascat['Start'][i]) & (df['endpos'] == ascat['End'][i])]['nAraw'].iloc[0]
                 nBraw = df.loc[(df['startpos'] == ascat['Start'][i]) & (df['endpos'] == ascat['End'][i])]['nBraw'].iloc[0]  
-                ascat['nAraw'][i] = nAraw
-                ascat['nBraw'][i] = nBraw
+                ascat.loc['nAraw'][i] = nAraw
+                ascat.loc['nBraw'][i] = nBraw
                 break
     ascat.to_csv(output, header=True, index=False, sep='\t')
     return ascat

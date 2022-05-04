@@ -103,7 +103,7 @@ def no_repeats(ascat, line1):
     reps = [0] * len(ascat)
     line1 = line1[line1['repFamily']=='L1'].reset_index()
     line1['Chr'] = line1['genoName'].str.split('_').str[0].str.extract('(\d+)', expand=False).dropna().astype(int)
-
+    line1=line1[0:100]
     for i in range(0, len(ascat)):
         count = 0
         for j in range(0, len(line1)):

@@ -16,7 +16,7 @@ def sample(df, nsamples):
     
     sampled_df = []
     for i in range(len(cancertypes)):
-        subset = df[df.cancer_type == cancertypes[i]].sample(n=nsamples, random_state=17).values.tolist()
+        subset = df[df.cancer_type == cancertypes[i]].sample(frac=float(nsamples), random_state=17).values.tolist()
         for j in subset:
             sampled_df.append(j)
     
