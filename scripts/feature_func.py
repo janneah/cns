@@ -145,10 +145,9 @@ def makefeatfile(ascat, centromere, gccontent, repeats):
  
     return feature_df
 
-def discretize(df):
-    # df['CN'] = df['CN'].round().astype(int)
-    quantiles = 4
-    labels = [i for i in range(1, quantiles + 1)]
+def discretize(df, nbins):
+    labels = [i for i in range(1, nbins + 1)]
+
     df['CN'] = pd.cut(
                         x=df['CN'], 
                         bins=[0, 1, 2, 3, 4, 5, df['CN'].max()], 
@@ -163,12 +162,12 @@ def discretize(df):
                         )
     df['Dist2Cent'] = pd.qcut(
                         x=df['Dist2Cent'], 
-                        q=quantiles,
+                        q=nbins,
                         labels=labels
                         )
     df['SegVal'] = pd.qcut(
                         x=df['SegVal'],
-                        q=quantiles,
+                        q=nbins,
                         labels=labels
                         )
     df['LOH'] = df['LOH'].round().astype(int)
@@ -180,22 +179,22 @@ def discretize(df):
                         )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
-                        q=quantiles,
+                        q=nbins,
                         labels=labels
                         )
     df['Dist2nCNV'] = pd.qcut(
                         x=df['Dist2nCNV'], 
-                        q=quantiles,
+                        q=nbins,
                         labels=labels
                         )
     df['GCcSeg'] = pd.qcut(
                         x=df['GCcSeg'], 
-                        q=quantiles,
+                        q=nbins,
                         labels=labels
                         )
     df['NoRepeats'] = pd.qcut(
                         x=df['NoRepeats'], 
-                        q=quantiles,
+                        q=nbins,
                         labels=labels
                         )
     

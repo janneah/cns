@@ -13,9 +13,10 @@ args = parser.parse_args()
 
 def fullDF(ascat, centroinfo, gccontent, repeats, output):
     feature_df = features.makefeatfile(ascat, centroinfo, gccontent, repeats)
-
-    feature_df = features.discretize(feature_df)
-    feature_df.to_csv(output, header=True, index=False, sep='\t')
+    nbins = [4, 5, 6, 7, 8, 9, 10]
+    for i in nbins:
+        feature_df = features.discretize(feature_df, i)
+        feature_df.to_csv(f'{output}_{i}.features', header=True, index=False, sep='\t')
 
     return feature_df
 

@@ -21,11 +21,11 @@ nsamples = 0.7
 # Intermediary files
 updatedascat = '../data/filteredAscatRaw.txt'
 sampledascat = f'../steps/sampledascat/sampled_{nsamples}.ascat'
-featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}_4.features'
+featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}'
 
 # Validation input and output
 remaining30ascat = '../steps/sampledascat/sampled_0.3.ascat'
-validation_featurefile = f'../steps/featurefiles/discretized_{nfeat}_0.3_6.features'
+validation_featurefile = f'../steps/featurefiles/discretized_{nfeat}_0.3'
 
 def update_ascat(samplefiles, ascat, updatedascat):
     inputs = [ascat]
@@ -77,7 +77,7 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimLDA(features, ntopics, nfeat):
-    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}_8bins.model'
+    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}.model'
 
     inputs = [features]
     outputs = [outputname]
@@ -152,7 +152,7 @@ gwf.target_from_template(
 )
 
 gwf.target_from_template(
-    name=f'CreateFeatures_4',
+    name=f'CreateFeatures',
     template=create_feature_file(
         ascat = sampledascat,
         centromere = centromereinfo,
@@ -163,7 +163,7 @@ gwf.target_from_template(
 )
 
 gwf.target_from_template(
-    name='CreateFeaturesValidation',
+    name=f'CreateFeaturesValidation',
     template=create_feature_file(
         ascat = remaining30ascat,
         centromere = centromereinfo,
