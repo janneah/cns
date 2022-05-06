@@ -128,3 +128,6 @@ scripts/.gwf/logs/gensimLDA_t15_f10.stdout
 data/repeats.txt
 steps/sampled_0.3.ascat
 steps/sampled_0.1.ascat
+steps/sampledascat/sampled_0.1.ascat
+steps/sampledascat/sampled_0.3.ascat
+steps/sampledascat/sampled_0.7.ascat
