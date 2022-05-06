@@ -21,11 +21,11 @@ nsamples = 0.7
 # Intermediary files
 updatedascat = '../data/filteredAscatRaw.txt'
 sampledascat = f'../steps/sampledascat/sampled_{nsamples}.ascat'
-featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}'
+featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}.features'
 
 # Validation input and output
 remaining30ascat = '../steps/sampledascat/sampled_0.3.ascat'
-validation_featurefile = f'../steps/featurefiles/discretized_{nfeat}_0.3'
+validation_featurefile = f'../steps/featurefiles/discretized_{nfeat}_0.3.features'
 
 def update_ascat(samplefiles, ascat, updatedascat):
     inputs = [ascat]
@@ -152,6 +152,16 @@ gwf.target_from_template(
 )
 
 gwf.target_from_template(
+    name='SampleAscat30',
+    template=sample_ascat(
+        ascat=updatedascat,
+        nsamples=0.3,
+        output=remaining30ascat
+    )
+)
+
+
+gwf.target_from_template(
     name=f'CreateFeatures',
     template=create_feature_file(
         ascat = sampledascat,
@@ -184,19 +194,19 @@ for i in range(start, ntopics + 1):
         )
     )
 
-    gwf.target_from_template(
-        name=f'gensimNMF_t{i}_f{nfeat}',
-        template=gensimNMF(
-            features=featurefile,
-            ntopics=i,
-            nfeat=nfeat
-        )
-    )
+#     gwf.target_from_template(
+#         name=f'gensimNMF_t{i}_f{nfeat}',
+#         template=gensimNMF(
+#             features=featurefile,
+#             ntopics=i,
+#             nfeat=nfeat
+#         )
+#     )
 
-gwf.target_from_template(
-    name=f'gensimHDP_f{nfeat}',
-    template=gensimHDP(
-        features=featurefile,
-        nfeat=nfeat
-    )
-)
+# gwf.target_from_template(
+#     name=f'gensimHDP_f{nfeat}',
+#     template=gensimHDP(
+#         features=featurefile,
+#         nfeat=nfeat
+#     )
+# )
