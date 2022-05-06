@@ -22,10 +22,11 @@ nsamples = 0.7
 updatedascat = '../data/filteredAscatRaw.txt'
 sampledascat = f'../steps/sampledascat/sampled_{nsamples}.ascat'
 featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}.features'
+discrete_features = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}'
 
 # Validation input and output
 remaining30ascat = '../steps/sampledascat/sampled_0.3.ascat'
-validation_featurefile = f'../steps/featurefiles/discretized_{nfeat}_0.3.features'
+validation_featurefile = f'../steps/featurefiles/nondiscretized_{nfeat}_0.3.features'
 
 def update_ascat(samplefiles, ascat, updatedascat):
     inputs = [ascat]
@@ -76,11 +77,28 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
 
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
-def gensimLDA(features, ntopics, nfeat):
-    outputname = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}.model'
+def discretize_featurefile(featurefile, output, first_output): 
+    inputs = [featurefile]
+    outputs = [first_output]
+    options = {
+        'memory': '10g',
+        'walltime': '1-00:00:00',
+        'account': 'CancerEvolution'
+    }
+    
+    spec = f'''
+    
+    python discretize.py {featurefile} {output}
+    
+    '''
+
+    return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
+
+def gensimLDA(features, ntopics):
+    output = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}.model'
 
     inputs = [features]
-    outputs = [outputname]
+    outputs = [output]
     options = {
         'memory': '10g',
         'walltime': '1-00:00:00',
@@ -89,7 +107,7 @@ def gensimLDA(features, ntopics, nfeat):
 
     spec = f'''
     
-    python gensimLDA.py {features} {ntopics} {outputname}
+    python gensimLDA.py {features} {ntopics} {output}
 
     '''
 
@@ -183,30 +201,47 @@ gwf.target_from_template(
     )
 )
 
+gwf.target_from_template(
+    name=f'DiscretizeFeatures',
+    template=discretize_featurefile(
+        featurefile = featurefile,
+        output = discrete_features,
+        first_output = f'{discrete_features}_8.features'
+    )
+)
+
+gwf.target_from_template(
+    name=f'DiscretizeFeatures30',
+    template=discretize_featurefile(
+        featurefile = validation_featurefile,
+        output = '../steps/featurefiles/discretized_10_0.3',
+        first_output = '../steps/featurefiles/discretized_10_0.3_8.features'
+    )
+)
+
 for i in range(start, ntopics + 1):
 
     gwf.target_from_template(
         name=f'gensimLDA_t{i}_f{nfeat}',
         template=gensimLDA(
-            features=featurefile,
-            ntopics=i,
-            nfeat=nfeat
+            features=discrete_features,
+            ntopics=i
         )
     )
 
 #     gwf.target_from_template(
-#         name=f'gensimNMF_t{i}_f{nfeat}',
+#         name=f'gensimNMF_t{i}_f{nfeat}_{i}',
 #         template=gensimNMF(
-#             features=featurefile,
+#             features=discrete_features,
 #             ntopics=i,
 #             nfeat=nfeat
 #         )
 #     )
 
 # gwf.target_from_template(
-#     name=f'gensimHDP_f{nfeat}',
+#     name=f'gensimHDP_f{nfeat}_{i}',
 #     template=gensimHDP(
-#         features=featurefile,
+#         features=discrete_features,
 #         nfeat=nfeat
 #     )
 # )

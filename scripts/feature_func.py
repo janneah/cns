@@ -145,8 +145,9 @@ def makefeatfile(ascat, centromere, gccontent, repeats):
  
     return feature_df
 
-def discretize(df, nbins):
+def discretize(inputdf, nbins):
     labels = [i for i in range(1, nbins + 1)]
+    df = inputdf
 
     df['CN'] = pd.cut(
                         x=df['CN'], 
