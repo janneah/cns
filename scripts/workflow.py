@@ -16,16 +16,16 @@ repeats = '../data/repeats.txt'
 nfeat = 10
 start = 1
 ntopics = 15
-nsamples = 0.1
+nsamples = 0.7
 
 # Intermediary files
-sampledascat = f'../steps/sampled_{nsamples}.ascat'
 updatedascat = '../data/filteredAscatRaw.txt'
-featurefile = f'../steps/discretized_{nfeat}_{nsamples}.features'
+sampledascat = f'../steps/sampledascat/sampled_{nsamples}.ascat'
+featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}_4.features'
 
 # Validation input and output
-remaining30ascat = '../steps/sampled_0.3.ascat'
-validation_featurefile = f'../steps/discretized_{nfeat}_0.3.features'
+remaining30ascat = '../steps/sampledascat/sampled_0.3.ascat'
+validation_featurefile = f'../steps/featurefiles/discretized_{nfeat}_0.3_6.features'
 
 def update_ascat(samplefiles, ascat, updatedascat):
     inputs = [ascat]
@@ -64,7 +64,7 @@ def create_feature_file(ascat, centromere, gc, repeats, output):
     outputs = [output]
     options = {
         'memory': '10g',
-        'walltime': '4-00:00:00',
+        'walltime': '1-00:00:00',
         'account': 'CancerEvolution'
     }
     
@@ -152,7 +152,7 @@ gwf.target_from_template(
 )
 
 gwf.target_from_template(
-    name='CreateFeatures',
+    name=f'CreateFeatures_4',
     template=create_feature_file(
         ascat = sampledascat,
         centromere = centromereinfo,

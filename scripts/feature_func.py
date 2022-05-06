@@ -99,21 +99,22 @@ def getDist2CNV(df):
 
     return dist2CNV
 
-def no_repeats(ascat, line1):   
+def no_repeats(ascat, line1):
     reps = [0] * len(ascat)
     line1 = line1[line1['repFamily']=='L1'].reset_index()
-    line1['Chr'] = line1['genoName'].str.split('_').str[0].str.extract('(\d+)', expand=False).dropna().astype(int)
+    line1['Chr'] = line1['genoName'].str.split('_').str[0].str.extract('(\d+)', expand=False)
+    line1 = line1.dropna(subset=['Chr'])
+    line1 = line1.astype({"Chr": int}, errors='raise') 
     
     for i in range(0, len(ascat)):
         count = 0
-        for j in range(0, len(line1)):
-            if line1['Chr'][j] == ascat['Chr'][i] and line1['genoStart'][j] >= ascat['Start'][i] and line1['genoStart'][j] < ascat['End'][i]:
-                count += 1
-            elif line1['Chr'][j] == ascat['Chr'][i] and line1['genoStart'][j] < ascat['Start'][i] and line1['genoEnd'][j] > ascat['Start'][i]:
-                count += 1
-            else:
-                continue
-        reps[i] = count
+        line1s = line1[
+            (line1.Chr == ascat.Chr[i]) & (line1.genoStart >= ascat.Start[i]) & (line1.genoStart < ascat.End[i]) 
+            | 
+            (line1.Chr == ascat.Chr[i]) & (line1.genoStart < ascat.Start[i]) & (line1.genoEnd > ascat.Start[i])
+            ]
+        
+        reps[i] = len(line1s.index)
     
     return reps
 
@@ -140,11 +141,14 @@ def makefeatfile(ascat, centromere, gccontent, repeats):
     })
 
     feature_df = feature_df.groupby(['Sample', 'Chr'], as_index=False, sort=False).mean()
+    feature_df = feature_df[feature_df.Chr != 23]
  
     return feature_df
 
 def discretize(df):
     # df['CN'] = df['CN'].round().astype(int)
+    quantiles = 4
+    labels = [i for i in range(1, quantiles + 1)]
     df['CN'] = pd.cut(
                         x=df['CN'], 
                         bins=[0, 1, 2, 3, 4, 5, df['CN'].max()], 
@@ -159,13 +163,13 @@ def discretize(df):
                         )
     df['Dist2Cent'] = pd.qcut(
                         x=df['Dist2Cent'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=quantiles,
+                        labels=labels
                         )
     df['SegVal'] = pd.qcut(
                         x=df['SegVal'],
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6] 
+                        q=quantiles,
+                        labels=labels
                         )
     df['LOH'] = df['LOH'].round().astype(int)
     df['SizeDipSeg'] = pd.cut(
@@ -176,23 +180,23 @@ def discretize(df):
                         )
     df['CpCN'] = pd.qcut(
                         x=df['CpCN'],
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6] 
+                        q=quantiles,
+                        labels=labels
                         )
     df['Dist2nCNV'] = pd.qcut(
                         x=df['Dist2nCNV'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=quantiles,
+                        labels=labels
                         )
     df['GCcSeg'] = pd.qcut(
                         x=df['GCcSeg'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=quantiles,
+                        labels=labels
                         )
     df['NoRepeats'] = pd.qcut(
                         x=df['NoRepeats'], 
-                        q=6,
-                        labels=[1, 2, 3, 4, 5, 6]
+                        q=quantiles,
+                        labels=labels
                         )
     
     df['CN'] = 'CN_' + df['CN'].astype(str)
