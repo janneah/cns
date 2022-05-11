@@ -21,7 +21,7 @@ nsamples = 0.7
 # Intermediary files
 updatedascat = '../data/filteredAscatRaw.txt'
 sampledascat = f'../steps/sampledascat/sampled_{nsamples}.ascat'
-featurefile = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}.features'
+featurefile = f'../steps/featurefiles/nondiscretized_{nfeat}_{nsamples}.features'
 discrete_features = f'../steps/featurefiles/discretized_{nfeat}_{nsamples}'
 
 # Validation input and output
@@ -222,11 +222,11 @@ gwf.target_from_template(
 for i in range(start, ntopics + 1):
 
     gwf.target_from_template(
-        name=f'gensimLDA_t{i}_f{nfeat}',
+        name=f'gensimLDA_t{i}_f{nfeat}_b6',
         template=gensimLDA(
-            features=f'{discrete_features}_8.features',
+            features=f'{discrete_features}_6.features',
             ntopics=i,
-            bins=8
+            bins=6
         )
     )
 
