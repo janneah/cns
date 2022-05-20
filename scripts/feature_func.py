@@ -136,7 +136,7 @@ def makefeatfile(ascat, centromere, gccontent, repeats):
                 'CpCN': getCP(ascat),
            'Dist2nCNV': getDist2CNV(ascat),
               'GCcSeg': getGCcontent(ascat, gccontent),
-           'NoRepeats': no_repeats(ascat, repeats)
+           'NumRepeats': no_repeats(ascat, repeats)
      
     })
 
@@ -193,8 +193,8 @@ def discretize(inputdf, nbins):
                         q=nbins,
                         labels=labels
                         )
-    df['NoRepeats'] = pd.qcut(
-                        x=df['NoRepeats'], 
+    df['NumRepeats'] = pd.qcut(
+                        x=df['NumRepeats'], 
                         q=nbins,
                         labels=labels
                         )
@@ -208,6 +208,6 @@ def discretize(inputdf, nbins):
     df['CpCN'] = 'CpCN_' + df['CpCN'].astype(str)
     df['Dist2nCNV'] = 'Dist2CNV_' + df['Dist2nCNV'].astype(str)
     df['GCcSeg'] = 'GCcSeg_' + df['GCcSeg'].astype(str)
-    df['NoRepeats'] = 'NoRepeats_' + df['NoRepeats'].astype(str)
+    df['NumRepeats'] = 'NumRepeats_' + df['NumRepeats'].astype(str)
 
     return df
