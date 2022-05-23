@@ -131,3 +131,5 @@ steps/sampled_0.1.ascat
 steps/sampledascat/sampled_0.1.ascat
 steps/sampledascat/sampled_0.3.ascat
 steps/sampledascat/sampled_0.7.ascat
+notebooks/.ipynb_checkpoints/top1000-checkpoint.txt
+notebooks/top1000.txt

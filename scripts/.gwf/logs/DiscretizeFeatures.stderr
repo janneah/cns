@@ -1,10 +1,10 @@
-/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4486: RuntimeWarning: invalid value encountered in subtract
+/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4009: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)
-/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4486: RuntimeWarning: invalid value encountered in subtract
+/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4009: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)
-/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4486: RuntimeWarning: invalid value encountered in subtract
+/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4009: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)
-/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4486: RuntimeWarning: invalid value encountered in subtract
+/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4009: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)
-/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4486: RuntimeWarning: invalid value encountered in subtract
+/home/janneae/miniconda3/envs/cns/lib/python3.10/site-packages/numpy/lib/function_base.py:4009: RuntimeWarning: invalid value encountered in subtract
   diff_b_a = subtract(b, a)

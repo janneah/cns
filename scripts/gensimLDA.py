@@ -11,7 +11,7 @@ parser.add_argument('outputfile', help='Name of the outputfile')
 args = parser.parse_args()
 
 file = pd.read_table(args.featurefile, dtype=str)
-df = file.drop(['Sample', 'Chr', 'NumRepeats'], axis = 1)
+df = file.drop(['Sample', 'Chr'], axis = 1)
 listedDf = df.values.tolist()
 
 dirichlet_dict = corpora.Dictionary(listedDf)
@@ -22,9 +22,6 @@ modelLDA = LdaModel(
         id2word=dirichlet_dict,
         num_topics=args.ntopics,
         chunksize=len(bow_corpus),
-        passes=10,
-        alpha='asymmetric',
-        eta='symmetric',
         random_state=42)
 
 modelLDA.save(args.outputfile)

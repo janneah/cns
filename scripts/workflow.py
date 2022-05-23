@@ -95,7 +95,7 @@ def discretize_featurefile(featurefile, output, first_output):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimLDA(features, ntopics, bins):
-    output = f'../steps/gensim/lda/lda_t{ntopics}_f{nfeat}_b{bins}.model'
+    output = f'../results/gensim/lda/lda_t{ntopics}_f{nfeat}_b{bins}.model'
 
     inputs = [features]
     outputs = [output]
@@ -114,7 +114,7 @@ def gensimLDA(features, ntopics, bins):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimHDP(features, nfeat):
-    outputname = f'../steps/gensim/hdp/hdp_f{nfeat}.model'
+    outputname = f'../results/gensim/hdp/hdp_f{nfeat}.model'
 
     inputs = [features]
     outputs = [outputname]
@@ -133,7 +133,7 @@ def gensimHDP(features, nfeat):
     return AnonymousTarget(inputs=inputs, outputs=outputs, options=options, spec=spec)
 
 def gensimNMF(features, ntopics, nfeat):
-    outputname = f'../steps/gensim//nmf/nmf_t{ntopics}_f{nfeat}.model'
+    outputname = f'../results/gensim//nmf/nmf_t{ntopics}_f{nfeat}.model'
 
     inputs = [features]
     outputs = [outputname]
@@ -222,11 +222,11 @@ gwf.target_from_template(
 for i in range(start, ntopics + 1):
 
     gwf.target_from_template(
-        name=f'gensimLDA_t{i}_f{nfeat}_b5',
+        name=f'gensimLDA_t{i}_f{nfeat}_b6',
         template=gensimLDA(
-            features=f'{discrete_features}_5.features',
+            features=f'{discrete_features}_6.features',
             ntopics=i,
-            bins=5
+            bins=6
         )
     )
 
