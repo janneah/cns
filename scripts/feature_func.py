@@ -74,9 +74,6 @@ def getGCcontent(df, gc_file):
         
     return gc
 
-def getRepeats(df):
-    return
-
 def getDist2CNV(df):
     dist2CNV = [0] * len(df)
     dist2CNV[0] = int(df['Start'][1] - df['End'][0])
@@ -133,7 +130,7 @@ def makefeatfile(ascat, centromere, gccontent, repeats):
               'SegVal': getSegVal(ascat),
                  'LOH': getLOH(ascat),
           'SizeDipSeg': getSizeofDiploidSeg(ascat),
-                'CpCN': getCP(ascat),
+                'BpC': getCP(ascat),
            'Dist2nCNV': getDist2CNV(ascat),
               'GCcSeg': getGCcontent(ascat, gccontent),
            'NumRepeats': no_repeats(ascat, repeats)
@@ -178,8 +175,8 @@ def discretize(inputdf, nbins):
                         labels=[1, 2, 3, 4],
                         include_lowest=True
                         )
-    df['CpCN'] = pd.qcut(
-                        x=df['CpCN'],
+    df['BpC'] = pd.qcut(
+                        x=df['BpC'],
                         q=nbins,
                         labels=labels
                         )
@@ -205,7 +202,7 @@ def discretize(inputdf, nbins):
     df['SegVal'] = 'SegVal_' + df['SegVal'].astype(str)
     df['LOH'] = 'LOH_' + df['LOH'].astype(str)
     df['SizeDipSeg'] = 'SizeDipSeg_' + df['SizeDipSeg'].astype(str)
-    df['CpCN'] = 'CpCN_' + df['CpCN'].astype(str)
+    df['BpC'] = 'BpC_' + df['BpC'].astype(str)
     df['Dist2nCNV'] = 'Dist2CNV_' + df['Dist2nCNV'].astype(str)
     df['GCcSeg'] = 'GCcSeg_' + df['GCcSeg'].astype(str)
     df['NumRepeats'] = 'NumRepeats_' + df['NumRepeats'].astype(str)

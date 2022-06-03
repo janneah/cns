@@ -222,11 +222,11 @@ gwf.target_from_template(
 for i in range(start, ntopics + 1):
 
     gwf.target_from_template(
-        name=f'gensimLDA_t{i}_f{nfeat}_b6',
+        name=f'gensimLDA_t{i}_f{nfeat}_b5',
         template=gensimLDA(
-            features=f'{discrete_features}_6.features',
+            features=f'{discrete_features}_5.features',
             ntopics=i,
-            bins=6
+            bins=5
         )
     )
 
